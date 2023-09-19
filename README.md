@@ -1,3 +1,3 @@
 # James Dashboard
 
-Fork of [[https://github.com/AalianKhan/mushroom-strategy][mushroom-strategy]].
+Fork of [https://github.com/AalianKhan/mushroom-strategy][mushroom-strategy].
