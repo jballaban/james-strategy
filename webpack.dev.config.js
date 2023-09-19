@@ -4,9 +4,9 @@ const webpack = require("webpack");
 module.exports = {
   mode: "development",
   devtool: "source-map",
-  entry: "./src/mushroom-strategy.js",
+  entry: "./src/james-strategy.js",
   output: {
-    filename: "mushroom-strategy.js",
+    filename: "james-strategy.js",
     path: path.resolve(__dirname, "dist"),
   },
   optimization: {
