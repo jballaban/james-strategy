@@ -13,6 +13,8 @@
 
 ## James Strategy
 
+This is james strategy
+
 ## What is Mushroom dashboard strategy?
 
 Mushroom dashboard strategy provides a strategy for Home assistant to automatically create a dashboard using Mushroom
