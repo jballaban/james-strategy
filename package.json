@@ -5,9 +5,9 @@
   "keywords": [
     "strategy"
   ],
-  "homepage": "https://github.com/jballaban/mushroom-strategy",
+  "homepage": "https://github.com/jballaban/james-strategy",
   "bugs": {
-    "url": "https://github.com/jballaban/mushroom-strategy/issues"
+    "url": "https://github.com/jballaban/james-strategy/issues"
   },
   "license": "MIT",
   "author": "James Ballaban",
@@ -16,7 +16,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jballaban/mushroom-strategy.git"
+    "url": "git+https://github.com/jballaban/james-strategy.git"
   },
   "devDependencies": {
     "webpack": "^5.88.2",
