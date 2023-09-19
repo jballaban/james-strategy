@@ -1,31 +1,33 @@
 {
-    "name": "james-strategy",
-    "version": "v1.0.0",
-    "description": "Automatic Dashboard for James",
-    "keywords": [
-        "strategy"
-    ],
-    "homepage": "https://github.com/jballaban/mushroom-strategy",
-    "bugs": "https://github.com/jballaban/mushroom-strategy/issues",
-    "license": "MIT",
-    "author": {
-        "name": "James Ballaban"
-    },
-    "contributors": [
-        {
-            "name": "Aalian Khan"
-        }
-    ],
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/jballaban/mushroom-strategy"
-    },
-    "devDependencies": {
-        "webpack": "^5",
-        "webpack-cli": "^5.1.4"
-    },
-    "scripts": {
-        "build": "webpack",
-        "build-dev": "webpack --config webpack.dev.config.js"
-    }
+  "name": "james-strategy",
+  "version": "1.0.1",
+  "description": "Automatic Dashboard for James",
+  "keywords": [
+    "strategy"
+  ],
+  "homepage": "https://github.com/jballaban/mushroom-strategy",
+  "bugs": {
+    "url": "https://github.com/jballaban/mushroom-strategy/issues"
+  },
+  "license": "MIT",
+  "author": "James Ballaban",
+  "contributors": [
+    "Aalian Khan"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jballaban/mushroom-strategy.git"
+  },
+  "devDependencies": {
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
+  },
+  "scripts": {
+    "build": "webpack",
+    "build-dev": "webpack --config webpack.dev.config.js"
+  },
+  "main": "webpack.config.js",
+  "directories": {
+    "doc": "docs"
+  }
 }
