@@ -20,4 +20,4 @@ class JamesStrategy {
 
 }
 
-customElements.define("ll-strategy-james", JamesStrategy);
+customElements.define("ll-strategy-james-strategy", JamesStrategy);
