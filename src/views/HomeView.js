@@ -12,7 +12,7 @@ import {AbstractView} from "./AbstractView";
 class HomeView extends AbstractView {
   /**
    * Default options for the view.
-   *
+   * 
    * @type {viewOptions}
    * @private
    */
