@@ -1,5 +1,5 @@
 export const optionDefaults = {
-  debug: false,
+  debug: true,
   views: {
     home: {
       order: 1,
@@ -13,5 +13,20 @@ export const optionDefaults = {
       picture: null,
       hidden: false,
     }
+  }, domains: {
+    default: {
+      title: "Miscellaneous",
+      showControls: false,
+      hidden: false,
+    },
+    light: {
+      title: "Lights",
+      showControls: true,
+      iconOn: "mdi:lightbulb",
+      iconOff: "mdi:lightbulb-off",
+      onService: "light.turn_on",
+      offService: "light.turn_off",
+      hidden: false,
+    },
   }
 }

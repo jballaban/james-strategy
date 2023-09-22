@@ -44,7 +44,7 @@ class HomeView extends AbstractView {
   async createViewCards() {
     return await Promise.all([
       this.#createAreaCards(),
-    ]).then(([chips, personCards, areaCards]) => {
+    ]).then(([areaCards]) => {
       const options       = Helper.strategyOptions;
       const homeViewCards = [
         {

@@ -10,11 +10,12 @@ class JamesStrategy {
 
     let viewModule;
 
-    // Create a view for each exposed domain.
     for (let viewId of Helper.getExposedViewIds()) {
       try {
         const viewType = Helper.sanitizeClassName(viewId + "View");
         viewModule     = await import(`./views/${viewType}`);
+        console.log(viewModule);
+        console.log(viewId);
         const view     = await new viewModule[viewType](Helper.strategyOptions.views[viewId]).getView();
 
         views.push(view);
