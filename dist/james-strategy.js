@@ -633,6 +633,129 @@ class AreaCard extends _AbstractCard__WEBPACK_IMPORTED_MODULE_0__.AbstractCard {
 
 /***/ }),
 
+/***/ "./src/cards/LightCard.js":
+/*!********************************!*\
+  !*** ./src/cards/LightCard.js ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   LightCard: () => (/* binding */ LightCard)
+/* harmony export */ });
+/* harmony import */ var _AbstractCard__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractCard */ "./src/cards/AbstractCard.js");
+
+
+/**
+ * Light Card Class
+ *
+ * Used to create a card for controlling an entity of the light domain.
+ *
+ * @class
+ * @extends AbstractCard
+ */
+class LightCard extends _AbstractCard__WEBPACK_IMPORTED_MODULE_0__.AbstractCard {
+  /**
+   * Default options of the card.
+   *
+   * @type {lightCardOptions}
+   * @private
+   */
+  #defaultOptions = {
+    type: "custom:mushroom-light-card",
+    icon: undefined,
+    show_brightness_control: true,
+    show_color_control: true,
+    use_light_color: true,
+    double_tap_action: {
+      target: {
+        entity_id: undefined,
+      },
+      action: "call-service",
+      service: "light.turn_on",
+      data: {
+        rgb_color: [255, 255, 255],
+      },
+    },
+  };
+
+  /**
+   * Class constructor.
+   *
+   * @param {hassEntity} entity The hass entity to create a card for.
+   * @param {lightCardOptions} [options={}] Options for the card.
+   * @throws {Error} If the Helper module isn't initialized.
+   */
+  constructor(entity, options = {}) {
+    super(entity);
+    this.mergeOptions(
+        this.#defaultOptions,
+        options,
+    );
+  }
+}
+
+
+
+
+/***/ }),
+
+/***/ "./src/cards/MiscellaneousCard.js":
+/*!****************************************!*\
+  !*** ./src/cards/MiscellaneousCard.js ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   MiscellaneousCard: () => (/* binding */ MiscellaneousCard)
+/* harmony export */ });
+/* harmony import */ var _AbstractCard__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractCard */ "./src/cards/AbstractCard.js");
+
+
+/**
+ * Miscellaneous Card Class
+ *
+ * Used to create a card an entity of any domain.
+ *
+ * @class
+ * @extends AbstractCard
+ */
+class MiscellaneousCard extends _AbstractCard__WEBPACK_IMPORTED_MODULE_0__.AbstractCard {
+  /**
+   * Default options of the card.
+   *
+   * @type {miscellaneousCardOptions}
+   * @private
+   */
+  #defaultOptions = {
+    type: "custom:mushroom-entity-card",
+    icon_color: "blue-grey",
+  };
+
+  /**
+   * Class constructor.
+   *
+   * @param {hassEntity} entity The hass entity to create a card for.
+   * @param {miscellaneousCardOptions} [options={}] Options for the card.
+   * @throws {Error} If the Helper module isn't initialized.
+   */
+  constructor(entity, options = {}) {
+    super(entity);
+    this.mergeOptions(
+        this.#defaultOptions,
+        options,
+    );
+  }
+}
+
+
+
+
+/***/ }),
+
 /***/ "./src/cards/TitleCard.js":
 /*!********************************!*\
   !*** ./src/cards/TitleCard.js ***!
@@ -749,6 +872,158 @@ class TitleCard {
 
 /***/ }),
 
+/***/ "./src/cards/typedefs.js":
+/*!*******************************!*\
+  !*** ./src/cards/typedefs.js ***!
+  \*******************************/
+/***/ (() => {
+
+/**
+ * @namespace typedefs.cards
+ */
+
+/**
+ * @typedef {Object} abstractOptions
+ * @property {string} [type] The type of the card.
+ * @property {string} [icon] Icon of the card.
+ * @property {Object} [double_tap_action] Home assistant action to perform on double_tap.
+ */
+
+/**
+ * @typedef {Object} titleCardOptions Title Card options.
+ * @property {string} [title] Title to render. May contain templates.
+ * @property {string} [subtitle] Subtitle to render. May contain templates.
+ * @property {boolean} [showControls=true] False to hide controls.
+ * @property {string} [iconOn] Icon to show for switching entities from off state.
+ * @property {string} [iconOff] Icon to show for switching entities to off state.
+ * @property {string} [onService=none] Service to call for switching entities from off state.
+ * @property {string} [offService=none] Service to call for switching entities to off state.
+ * @memberOf typedefs.cards
+ */
+
+/**
+ * @typedef {abstractOptions & Object} lightCardOptions Light Card options.
+ * @property {boolean} [show_brightness_control=true]  Show a slider to control brightness
+ * @property {boolean} [show_color_control=true] Show a slider to control RGB color
+ * @property {boolean} [use_light_color=true] Colorize the icon and slider according light temperature or color
+ * @property {{double_tap_action: lightDoubleTapAction}} [action] Home assistant action to perform on double_tap
+ * @memberOf typedefs.cards
+ */
+
+/**
+ * @typedef {Object} lightDoubleTapAction Home assistant action to perform on double_tap.
+ * @property {{entity_id: string}} target The target entity id.
+ * @property {"call-service"} action Calls a hass service.
+ * @property {"light.turn_on"} service The hass service to call
+ * @property {{rgb_color: [255, 255, 255]}} data The data payload for the service.
+ * @memberOf typedefs.cards
+ */
+
+/**
+ * @typedef {abstractOptions & Object} coverCardOptions Cover Card options.
+ * @property {boolean} [show_buttons_control=true] Show buttons to open, close and stop cover.
+ * @property {boolean} [show_position_control=true] Show a slider to control position of the cover.
+ * @property {boolean} [show_tilt_position_control=true] Show a slider to control tilt position of the cover.
+ * @memberOf typedefs.cards
+ */
+
+/**
+ * @typedef {abstractOptions & Object} fanCardOptions Fan Card options.
+ * @property {boolean} [show_percentage_control=true] Show a slider to control speed.
+ * @property {boolean} [show_oscillate_control=true] Show a button to control oscillation.
+ * @property {boolean} [icon_animation=true] Animate the icon when fan is on.
+ * @memberOf typedefs.cards
+ */
+
+/**
+ * @typedef {abstractOptions & Object} lockCardOptions Lock Card options.
+ * @memberOf typedefs.cards
+ */
+
+/**
+ * @typedef {abstractOptions & Object} switchCardOptions Switch Card options.
+ * @property {{tap_action: switchTapAction}} [action] Home assistant action to perform on tap.
+ * @memberOf typedefs.cards
+ */
+
+/**
+ * @typedef {Object} switchTapAction Home assistant action to perform on tap.
+ * @property {"toggle"} action Toggles a hass entity.
+ * @memberOf typedefs.cards
+ */
+
+/**
+ * @typedef {abstractOptions & Object} climateCardOptions Climate Card options.
+ * @property {["off", "cool", "heat", "fan_only"]} [hvac_modes] Show buttons to control target temperature.
+ * @property {boolean} [show_temperature_control=true] Show buttons to control target temperature.
+ * @memberOf typedefs.cards
+ */
+
+/**
+ * @typedef {abstractOptions} cameraCardOptions Camera Card options.
+ * @memberOf typedefs.cards
+ */
+
+/**
+ * @typedef {abstractOptions & Object} personCardOptions Person Card options.
+ * @property {string} [layout] Layout of the card. Vertical, horizontal, and default layouts are supported.
+ * @property {("name" | "state" | "last-changed" | "last-updated" | "none")} [primary_info=name] Info to show as
+ *     primary info.
+ * @property {("name" | "state" | "last-changed" | "last-updated" | "none")} [secondary_info=sate] Info to show as
+ *     secondary info.
+ * @property {("icon" | "entity-picture" | "none")} [icon_type]=icon Type of icon to display.
+ * @memberOf typedefs.cards
+ */
+
+/**
+ * @typedef {abstractOptions & Object} areaCardOptions Area Card options.
+ * @property {string} [name] The name of the area
+ * @property {string} [icon] Icon to render. May contain templates.
+ * @property {string} [icon_color] Icon color to render. May contain templates.
+ * @property {string} [primary] Primary info to render. May contain templates.
+ * @property {areaTapAction} [tap_action] Home assistant action to perform on tap.
+ * @memberOf typedefs.cards
+ */
+
+/**
+ * @typedef {Object} areaTapAction Home assistant action to perform on tap.
+ * @property {"navigate"} action Toggles a hass entity.
+ * @property {string} navigation_path The id of the area to navigate to.
+ * @memberOf typedefs.cards
+ */
+
+/**
+ * @typedef {abstractOptions & Object} mediaPlayerCardOptions Media Player Card options.
+ * @property {boolean} [use_media_info=true] Use media info instead of name, state, and icon when a media is playing
+ * @property {string[]} [media_controls="on_off", "play_pause_stop"] List of controls to display
+ *                                                                   (on_off, shuffle, previous, play_pause_stop, next,
+ *                                                                   repeat)
+ * @property {boolean} [show_volume_level=true] Show volume level next to media state when media is playing
+ * @property {string[]} [volume_controls="volume_mute", "volume_set", "volume_buttons"] List of controls to display
+ *                                                                                      (volume_mute, volume_set,
+ *                                                                                      volume_buttons)
+ * @memberOf typedefs.cards
+ */
+
+/**
+ * @typedef {abstractOptions & Object} sensorCardOptions Sensor Card options.
+ * @property {string} [icon_color=green] Custom color for icon when entity is state is active.
+ * @property {boolean} [animate=true] Add a reveal animation to the graph.
+ * @property {string} [line_color=green] Set a custom color for the graph line.
+ *                                       Provide a list of colors for multiple graph entries.
+ * @memberOf typedefs.cards
+ */
+
+/**
+ * @typedef {abstractOptions & Object} miscellaneousCardOptions Miscellaneous Card options.
+ * @property {string} [icon_color=blue-grey] Custom color for icon when entity is state is active.
+ * @memberOf typedefs.cards
+ */
+
+
+
+/***/ }),
+
 /***/ "./src/cards lazy recursive ^\\.\\/.*$":
 /*!***************************************************!*\
   !*** ./src/cards/ lazy ^\.\/.*$ namespace object ***!
@@ -758,25 +1033,61 @@ class TitleCard {
 var map = {
 	"./AbstractCard": [
 		"./src/cards/AbstractCard.js",
+		9,
 		"main"
 	],
 	"./AbstractCard.js": [
 		"./src/cards/AbstractCard.js",
+		9,
 		"main"
 	],
 	"./AreaCard": [
 		"./src/cards/AreaCard.js",
+		9,
 		"main"
 	],
 	"./AreaCard.js": [
 		"./src/cards/AreaCard.js",
+		9,
+		"main"
+	],
+	"./LightCard": [
+		"./src/cards/LightCard.js",
+		9,
+		"main"
+	],
+	"./LightCard.js": [
+		"./src/cards/LightCard.js",
+		9,
+		"main"
+	],
+	"./MiscellaneousCard": [
+		"./src/cards/MiscellaneousCard.js",
+		9,
+		"main"
+	],
+	"./MiscellaneousCard.js": [
+		"./src/cards/MiscellaneousCard.js",
+		9,
 		"main"
 	],
 	"./TitleCard": [
-		"./src/cards/TitleCard.js"
+		"./src/cards/TitleCard.js",
+		9
 	],
 	"./TitleCard.js": [
-		"./src/cards/TitleCard.js"
+		"./src/cards/TitleCard.js",
+		9
+	],
+	"./typedefs": [
+		"./src/cards/typedefs.js",
+		7,
+		"main"
+	],
+	"./typedefs.js": [
+		"./src/cards/typedefs.js",
+		7,
+		"main"
 	]
 };
 function webpackAsyncContext(req) {
@@ -789,8 +1100,8 @@ function webpackAsyncContext(req) {
 	}
 
 	var ids = map[req], id = ids[0];
-	return Promise.all(ids.slice(1).map(__webpack_require__.e)).then(() => {
-		return __webpack_require__(id);
+	return Promise.all(ids.slice(2).map(__webpack_require__.e)).then(() => {
+		return __webpack_require__.t(id, ids[1] | 16)
 	});
 }
 webpackAsyncContext.keys = () => (Object.keys(map));
@@ -1123,6 +1434,56 @@ class HomeView extends _AbstractView__WEBPACK_IMPORTED_MODULE_1__.AbstractView {
 
 /***/ }),
 
+/***/ "./src/views/typedefs.js":
+/*!*******************************!*\
+  !*** ./src/views/typedefs.js ***!
+  \*******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/**
+ * @namespace typedefs.views
+ */
+
+/**
+ * @typedef {Object} abstractOptions Options to create a view.
+ * @property {string} [title] The title or name.
+ * @property {string} [path] Paths are used in the URL.
+ * @property {string} [icon] The icon of the view.
+ * @property {boolean} subview  Mark the view as “Subview”.
+ * @memberOf typedefs.views
+ * @see https://www.home-assistant.io/dashboards/views/
+ */
+
+/**
+ * @typedef {abstractOptions & Object} viewOptions Options for the extended View class.
+ * @property {titleCardOptions} [titleCard] Options for the title card of the view.
+ * @memberOf typedefs.views
+ */
+
+/**
+ * @typedef {Object} titleCardOptions Options for the title card of the view.
+ * @property {string} iconOn Icon to show for switching entities from off state.
+ * @property {string} iconOff Icon to show for switching entities to off state.
+ * @property {string} onService Service to call for switching entities from off state.
+ * @property {string} offService Service to call for switching entities to off state.
+ * @memberOf typedefs.views
+ */
+
+/**
+ * @typedef {Object} viewTitleCardOptions Options for the view's title card.
+ * @property {string} [title] Title to render. May contain templates.
+ * @property {string} [subtitle] Subtitle to render. May contain templates.
+ * @property {boolean} [showControls=true] False to hide controls.
+ * @memberOf typedefs.views
+ */
+
+
+
+
+/***/ }),
+
 /***/ "./src/views lazy recursive ^\\.\\/.*$":
 /*!***************************************************!*\
   !*** ./src/views/ lazy ^\.\/.*$ namespace object ***!
@@ -1144,6 +1505,14 @@ var map = {
 	],
 	"./HomeView.js": [
 		"./src/views/HomeView.js",
+		"main"
+	],
+	"./typedefs": [
+		"./src/views/typedefs.js",
+		"main"
+	],
+	"./typedefs.js": [
+		"./src/views/typedefs.js",
 		"main"
 	]
 };
@@ -1194,6 +1563,36 @@ module.exports = webpackAsyncContext;
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/create fake namespace object */
+/******/ 	(() => {
+/******/ 		var getProto = Object.getPrototypeOf ? (obj) => (Object.getPrototypeOf(obj)) : (obj) => (obj.__proto__);
+/******/ 		var leafPrototypes;
+/******/ 		// create a fake namespace object
+/******/ 		// mode & 1: value is a module id, require it
+/******/ 		// mode & 2: merge all properties of value into the ns
+/******/ 		// mode & 4: return value when already ns object
+/******/ 		// mode & 16: return value when it's Promise-like
+/******/ 		// mode & 8|1: behave like require
+/******/ 		__webpack_require__.t = function(value, mode) {
+/******/ 			if(mode & 1) value = this(value);
+/******/ 			if(mode & 8) return value;
+/******/ 			if(typeof value === 'object' && value) {
+/******/ 				if((mode & 4) && value.__esModule) return value;
+/******/ 				if((mode & 16) && typeof value.then === 'function') return value;
+/******/ 			}
+/******/ 			var ns = Object.create(null);
+/******/ 			__webpack_require__.r(ns);
+/******/ 			var def = {};
+/******/ 			leafPrototypes = leafPrototypes || [null, getProto({}), getProto([]), getProto(getProto)];
+/******/ 			for(var current = mode & 2 && value; typeof current == 'object' && !~leafPrototypes.indexOf(current); current = getProto(current)) {
+/******/ 				Object.getOwnPropertyNames(current).forEach((key) => (def[key] = () => (value[key])));
+/******/ 			}
+/******/ 			def['default'] = () => (value);
+/******/ 			__webpack_require__.d(ns, def);
+/******/ 			return ns;
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -1240,6 +1639,8 @@ var __webpack_exports__ = {};
   \*******************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Helper__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Helper */ "./src/Helper.js");
+/* harmony import */ var _cards_TitleCard__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./cards/TitleCard */ "./src/cards/TitleCard.js");
+
 
 
 class JamesStrategy {
@@ -1256,8 +1657,6 @@ class JamesStrategy {
       try {
         const viewType = _Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.sanitizeClassName(viewId + "View");
         viewModule     = await __webpack_require__("./src/views lazy recursive ^\\.\\/.*$")(`./${viewType}`);
-        console.log(viewModule);
-        console.log(viewId);
         const view     = await new viewModule[viewType](_Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.strategyOptions.views[viewId]).getView();
 
         views.push(view);
@@ -1267,11 +1666,202 @@ class JamesStrategy {
       }
     }
 
+    // Create subviews for each area.
+    for (let area of _Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.areas) {
+      if (!area.hidden) {
+        views.push({
+          title: area.name,
+          path: area.area_id ?? area.name,
+          subview: true,
+          strategy: {
+            type: "custom:james-strategy",
+            options: {
+              area,
+            },
+          },
+        });
+      }
+    }
+
     return {
       views: views,
     };
   }
+
+  
+  /**
+   * Generate a view.
+   *
+   * Called when opening a subview.
+   *
+   * @param {viewInfo} info The view's strategy information object.
+   * @return {Promise<{cards: Object[]}>}
+   */
+  static async generateView(info) {
+    const exposedDomainIds = _Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.getExposedDomainIds();
+    const area             = info.view.strategy.options.area;
+    const viewCards        = [...(area.extra_cards ?? [])];
+
+    // Create cards for each domain.
+    for (const domain of exposedDomainIds) {
+      if (domain === "default") {
+        continue;
+      }
+
+      const className = _Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.sanitizeClassName(domain + "Card");
+
+      let domainCards = [];
+
+      try {
+        domainCards = await __webpack_require__("./src/cards lazy recursive ^\\.\\/.*$")(`./${className}`).then(cardModule => {
+          let domainCards = [];
+          const entities  = _Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.getDeviceEntities(area, domain);
+
+          if (entities.length) {
+            // Create a Title card for the current domain.
+            const titleCard = new _cards_TitleCard__WEBPACK_IMPORTED_MODULE_1__.TitleCard(
+                [area],
+                _Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.strategyOptions.domains[domain],
+            ).createCard();
+
+            if (domain === "sensor") {
+              // Create a card for each entity-sensor of the current area.
+              const sensorStates = _Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.getStateEntities(area, "sensor");
+              const sensorCards  = [];
+
+              for (const sensor of entities) {
+                // Find the state of the current sensor.
+                const sensorState = sensorStates.find(state => state.entity_id === sensor.entity_id);
+                let cardOptions   = _Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.strategyOptions.card_options?.[sensor.entity_id] ?? {};
+
+                if (!cardOptions.hidden) {
+                  if (sensorState?.attributes.unit_of_measurement) {
+                    cardOptions = {
+                      ...{
+                        type: "custom:mini-graph-card",
+                        entities: [sensor.entity_id],
+                      },
+                      ...cardOptions,
+                    };
+                  }
+
+                  sensorCards.push(new SensorCard(sensor, cardOptions).getCard());
+                }
+              }
+
+              if (sensorCards.length) {
+                domainCards.push({
+                  type: "vertical-stack",
+                  cards: sensorCards,
+                });
+
+                domainCards.unshift(titleCard);
+              }
+
+              return domainCards;
+            }
+
+            // Create a card for each domain-entity of the current area.
+            for (const entity of entities) {
+              let cardOptions = _Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.strategyOptions.card_options?.[entity.entity_id] ?? {};
+
+              if (!cardOptions.hidden) {
+                domainCards.push(new cardModule[className](entity, cardOptions).getCard());
+              }
+            }
+
+            if (domain === "binary_sensor") {
+              // Horizontally group every two binary sensor cards.
+              const horizontalCards = [];
+
+              for (let i = 0; i < domainCards.length; i += 2) {
+                horizontalCards.push({
+                  type: "horizontal-stack",
+                  cards: domainCards.slice(i, i + 2),
+                });
+              }
+
+              domainCards = horizontalCards;
+            }
+
+            if (domainCards.length) {
+              domainCards.unshift(titleCard);
+            }
+          }
+
+          return domainCards;
+        });
+      } catch (e) {
+        console.error(_Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.debug ? e : "An error occurred while creating the domain cards!");
+      }
+
+      if (domainCards.length) {
+        viewCards.push({
+          type: "vertical-stack",
+          cards: domainCards,
+        });
+      }
+    }
+
+    if (!_Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.strategyOptions.domains.default.hidden) {
+      // TODO: Check if default is hidden
+      // Create cards for any other domain.
+      // Collect device entities of the current area.
+      const areaDevices = _Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.devices.filter(device => device.area_id === area.area_id)
+          .map(device => device.id);
+  
+      // Collect the remaining entities of which all conditions below are met:
+      // 1. The entity is linked to a device which is linked to the current area,
+      //    or the entity itself is linked to the current area.
+      // 2. The entity is not hidden and is not disabled.
+      const miscellaneousEntities = _Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.entities.filter(entity => {
+        return (areaDevices.includes(entity.device_id) || entity.area_id === area.area_id)
+            && entity.hidden_by == null
+            && entity.disabled_by == null
+            && !exposedDomainIds.includes(entity.entity_id.split(".", 1)[0]);
+      });
+  
+      // Create a column of miscellaneous entity cards.
+      if (miscellaneousEntities.length) {
+        let miscellaneousCards = [];
+  
+        try {
+          miscellaneousCards = await Promise.resolve(/*! import() */).then(__webpack_require__.bind(__webpack_require__, /*! ./cards/MiscellaneousCard */ "./src/cards/MiscellaneousCard.js")).then(cardModule => {
+            /** @type Object[] */
+            const miscellaneousCards = [
+              new _cards_TitleCard__WEBPACK_IMPORTED_MODULE_1__.TitleCard([area], _Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.strategyOptions.domains.default).createCard(),
+            ];
+  
+            for (const entity of miscellaneousEntities) {
+              let cardOptions = _Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.strategyOptions.card_options?.[entity.entity_id] ?? {};
+  
+              if (!cardOptions.hidden) {
+                miscellaneousCards.push(new cardModule.MiscellaneousCard(entity, cardOptions).getCard());
+              }
+            }
+  
+            return miscellaneousCards;
+          });
+        } catch (e) {
+          console.error(_Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.debug ? e : "An error occurred while creating the domain cards!");
+        }
+  
+        viewCards.push({
+          type: "vertical-stack",
+          cards: miscellaneousCards,
+        });
+      }
+    }
+
+    // Return cards.
+    return {
+      cards: viewCards,
+    };
+  }
+
 }
+
+
 
 customElements.define("ll-strategy-james-strategy", JamesStrategy);
 })();
