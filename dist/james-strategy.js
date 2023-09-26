@@ -411,6 +411,11 @@ class Helper {
     );
   }
 
+  static getName(id) {
+    return id
+      .replace(/(\_[a-z])/g, group => group.toUpperCase()).replace(/\_/g," ").replace(/^([a-z])/g, group => group.toUpperCase());
+  }
+
   /**
    * Get the keys of nested objects by its property value.
    *
@@ -572,7 +577,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   AreaCard: () => (/* binding */ AreaCard)
 /* harmony export */ });
-/* harmony import */ var cards_AbstractCard__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! cards/AbstractCard */ "./src/cards/AbstractCard.js");
+/* harmony import */ var Helper__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! Helper */ "./src/Helper.js");
+/* harmony import */ var cards_AbstractCard__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! cards/AbstractCard */ "./src/cards/AbstractCard.js");
+
 
 
 /**
@@ -583,7 +590,7 @@ __webpack_require__.r(__webpack_exports__);
  * @class
  * @extends AbstractCard
  */
-class AreaCard extends cards_AbstractCard__WEBPACK_IMPORTED_MODULE_0__.AbstractCard {
+class AreaCard extends cards_AbstractCard__WEBPACK_IMPORTED_MODULE_1__.AbstractCard {
   /**
    * Default options of the card.
    *
@@ -602,25 +609,29 @@ class AreaCard extends cards_AbstractCard__WEBPACK_IMPORTED_MODULE_0__.AbstractC
     hold_action: {
       action: "none",
     },
-    entities: [
-      {
-        "show_icon": true,
-        "show_state": true,
-        "show_name": false,
-        "icon": {
-          "conditions": [
-            {
-              "condition": "above",
-              "value": 0,
-              "styles": {
-                "color": "yellow"
-              }
-            }
-          ]
-        }
-      }
-    ]
+    entities: []
   };
+
+  #entityOptions = {
+    "show_icon": true,
+    "show_state": true,
+    "show_name": false,
+    tap_action: {
+      action: "navigate",
+      navigation_path: undefined,
+    },
+    "icon": {
+      "conditions": [
+        {
+          "condition": "above",
+          "value": 0,
+          "styles": {
+            "color": "yellow"
+          }
+        }
+      ]
+    }
+  }
 
   /**
    * Class constructor.
@@ -633,7 +644,22 @@ class AreaCard extends cards_AbstractCard__WEBPACK_IMPORTED_MODULE_0__.AbstractC
     super(area);
     this.#defaultOptions.title                      = area.name;
     this.#defaultOptions.tap_action.navigation_path = area.area_id ?? area.name;
-    this.#defaultOptions.entities[0].entity         = `sensor.${area.area_id}_lights_on`;
+
+    let exposedDomainIds = Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.getExposedDomainIds();
+
+    for (let domain of exposedDomainIds) {
+      let entity = {
+        ...this.#entityOptions,
+        ...{
+          "entity": `sensor.${area.area_id}_${domain}s_on`,
+          "tap_action": {
+            action: "navigate",
+            "navigation_path": `${area.area_id ?? area.name}_${domain}`
+          }
+        }
+      }
+      this.#defaultOptions.entities.push(entity);
+    }
 
     this.mergeOptions(
         this.#defaultOptions,
@@ -1305,20 +1331,23 @@ class AreaView extends views_AbstractView__WEBPACK_IMPORTED_MODULE_1__.AbstractV
     subview: true,
   };
 
-  #area = {}
+  #area = undefined;
+
+  #domain = undefined;
 
   /**
    * Class constructor.
    *
    * @param {viewOptions} [options={}] Options for the view.
    */
-  constructor(options = {}, area) {
+  constructor(options = {}, area = undefined, domain = undefined) {
     super();
     this.mergeOptions(
         this.#defaultOptions,
         options,
     );
     this.#area = area;
+    this.#domain = domain;
   }
 
   /**
@@ -1335,6 +1364,10 @@ class AreaView extends views_AbstractView__WEBPACK_IMPORTED_MODULE_1__.AbstractV
     // Create cards for each domain.
     for (const domain of exposedDomainIds) {
       if (domain === "default") {
+        continue;
+      }
+
+      if (this.#domain && domain !== this.#domain) {
         continue;
       }
 
@@ -1395,6 +1428,10 @@ class AreaView extends views_AbstractView__WEBPACK_IMPORTED_MODULE_1__.AbstractV
               let cardOptions = Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.strategyOptions.card_options?.[entity.entity_id] ?? {};
 
               if (!cardOptions.hidden) {
+                cardOptions.name = (entity.name ?? Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.getName(entity.entity_id.split('.')[1]))
+                  .replace(area.name, "")
+                  .replace(domain.replace(/^([a-z])/g, group => group.toUpperCase())+"s", "")
+                  .trim();
                 domainCards.push(new cardModule[className](entity, cardOptions).getCard());
               }
             }
@@ -1432,7 +1469,7 @@ class AreaView extends views_AbstractView__WEBPACK_IMPORTED_MODULE_1__.AbstractV
       }
     }
 
-    if (!Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.strategyOptions.domains.default.hidden) {
+    if (!this.#domain && !Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.strategyOptions.domains.default.hidden) {
       // TODO: Check if default is hidden
       // Create cards for any other domain.
       // Collect device entities of the current area.
@@ -1463,7 +1500,9 @@ class AreaView extends views_AbstractView__WEBPACK_IMPORTED_MODULE_1__.AbstractV
   
             for (const entity of miscellaneousEntities) {
               let cardOptions = Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.strategyOptions.card_options?.[entity.entity_id] ?? {};
-  
+              cardOptions.name = (entity.name ?? Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.getName(entity.entity_id.split('.')[1]))
+                .replace(area.name, "")
+                .trim();
               if (!cardOptions.hidden) {
                 miscellaneousCards.push(new cardModule.MiscellaneousCard(entity, cardOptions).getCard());
               }
@@ -1871,6 +1910,14 @@ class JamesStrategy {
             path: area.area_id ?? area.name
           }, area).getView()
         );
+        let exposedDomainIds = Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.getExposedDomainIds();
+        for (let domain of exposedDomainIds) {
+          views.push(
+            await new areaViewModule["AreaView"]({
+              path: [area.area_id ?? area.name, domain].join("_")
+            }, area, domain).getView()
+          );
+        }
       }
     }
 

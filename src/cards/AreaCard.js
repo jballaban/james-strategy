@@ -1,3 +1,4 @@
+import {Helper} from "Helper";
 import {AbstractCard} from "cards/AbstractCard";
 
 /**
@@ -27,25 +28,29 @@ class AreaCard extends AbstractCard {
     hold_action: {
       action: "none",
     },
-    entities: [
-      {
-        "show_icon": true,
-        "show_state": true,
-        "show_name": false,
-        "icon": {
-          "conditions": [
-            {
-              "condition": "above",
-              "value": 0,
-              "styles": {
-                "color": "yellow"
-              }
-            }
-          ]
-        }
-      }
-    ]
+    entities: []
   };
+
+  #entityOptions = {
+    "show_icon": true,
+    "show_state": true,
+    "show_name": false,
+    tap_action: {
+      action: "navigate",
+      navigation_path: undefined,
+    },
+    "icon": {
+      "conditions": [
+        {
+          "condition": "above",
+          "value": 0,
+          "styles": {
+            "color": "yellow"
+          }
+        }
+      ]
+    }
+  }
 
   /**
    * Class constructor.
@@ -58,7 +63,22 @@ class AreaCard extends AbstractCard {
     super(area);
     this.#defaultOptions.title                      = area.name;
     this.#defaultOptions.tap_action.navigation_path = area.area_id ?? area.name;
-    this.#defaultOptions.entities[0].entity         = `sensor.${area.area_id}_lights_on`;
+
+    let exposedDomainIds = Helper.getExposedDomainIds();
+
+    for (let domain of exposedDomainIds) {
+      let entity = {
+        ...this.#entityOptions,
+        ...{
+          "entity": `sensor.${area.area_id}_${domain}s_on`,
+          "tap_action": {
+            action: "navigate",
+            "navigation_path": `${area.area_id ?? area.name}_${domain}`
+          }
+        }
+      }
+      this.#defaultOptions.entities.push(entity);
+    }
 
     this.mergeOptions(
         this.#defaultOptions,

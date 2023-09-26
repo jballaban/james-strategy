@@ -21,20 +21,23 @@ class AreaView extends AbstractView {
     subview: true,
   };
 
-  #area = {}
+  #area = undefined;
+
+  #domain = undefined;
 
   /**
    * Class constructor.
    *
    * @param {viewOptions} [options={}] Options for the view.
    */
-  constructor(options = {}, area) {
+  constructor(options = {}, area = undefined, domain = undefined) {
     super();
     this.mergeOptions(
         this.#defaultOptions,
         options,
     );
     this.#area = area;
+    this.#domain = domain;
   }
 
   /**
@@ -51,6 +54,10 @@ class AreaView extends AbstractView {
     // Create cards for each domain.
     for (const domain of exposedDomainIds) {
       if (domain === "default") {
+        continue;
+      }
+
+      if (this.#domain && domain !== this.#domain) {
         continue;
       }
 
@@ -111,6 +118,10 @@ class AreaView extends AbstractView {
               let cardOptions = Helper.strategyOptions.card_options?.[entity.entity_id] ?? {};
 
               if (!cardOptions.hidden) {
+                cardOptions.name = (entity.name ?? Helper.getName(entity.entity_id.split('.')[1]))
+                  .replace(area.name, "")
+                  .replace(domain.replace(/^([a-z])/g, group => group.toUpperCase())+"s", "")
+                  .trim();
                 domainCards.push(new cardModule[className](entity, cardOptions).getCard());
               }
             }
@@ -148,7 +159,7 @@ class AreaView extends AbstractView {
       }
     }
 
-    if (!Helper.strategyOptions.domains.default.hidden) {
+    if (!this.#domain && !Helper.strategyOptions.domains.default.hidden) {
       // TODO: Check if default is hidden
       // Create cards for any other domain.
       // Collect device entities of the current area.
@@ -179,7 +190,9 @@ class AreaView extends AbstractView {
   
             for (const entity of miscellaneousEntities) {
               let cardOptions = Helper.strategyOptions.card_options?.[entity.entity_id] ?? {};
-  
+              cardOptions.name = (entity.name ?? Helper.getName(entity.entity_id.split('.')[1]))
+                .replace(area.name, "")
+                .trim();
               if (!cardOptions.hidden) {
                 miscellaneousCards.push(new cardModule.MiscellaneousCard(entity, cardOptions).getCard());
               }

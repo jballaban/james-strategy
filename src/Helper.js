@@ -396,6 +396,11 @@ class Helper {
     );
   }
 
+  static getName(id) {
+    return id
+      .replace(/(\_[a-z])/g, group => group.toUpperCase()).replace(/\_/g," ").replace(/^([a-z])/g, group => group.toUpperCase());
+  }
+
   /**
    * Get the keys of nested objects by its property value.
    *

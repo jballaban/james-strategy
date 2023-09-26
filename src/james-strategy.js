@@ -33,6 +33,14 @@ class JamesStrategy {
             path: area.area_id ?? area.name
           }, area).getView()
         );
+        let exposedDomainIds = Helper.getExposedDomainIds();
+        for (let domain of exposedDomainIds) {
+          views.push(
+            await new areaViewModule["AreaView"]({
+              path: [area.area_id ?? area.name, domain].join("_")
+            }, area, domain).getView()
+          );
+        }
       }
     }
 
