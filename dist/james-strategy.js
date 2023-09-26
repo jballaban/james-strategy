@@ -12,7 +12,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Helper: () => (/* binding */ Helper)
 /* harmony export */ });
-/* harmony import */ var _optionDefaults__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./optionDefaults */ "./src/optionDefaults.js");
+/* harmony import */ var optionDefaults__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! optionDefaults */ "./src/optionDefaults.js");
 
 
 /**
@@ -71,7 +71,7 @@ class Helper {
    *
    * @type {boolean}
    */
-  static debug = _optionDefaults__WEBPACK_IMPORTED_MODULE_0__.optionDefaults.debug;
+  static debug = optionDefaults__WEBPACK_IMPORTED_MODULE_0__.optionDefaults.debug;
 
   /**
    * Class constructor.
@@ -159,7 +159,7 @@ class Helper {
     // Setup and add the undisclosed area if not hidden in the strategy options.
     if (!this.#strategyOptions.areas.undisclosed?.hidden) {
       this.#strategyOptions.areas.undisclosed = {
-        ..._optionDefaults__WEBPACK_IMPORTED_MODULE_0__.optionDefaults.areas.undisclosed,
+        ...optionDefaults__WEBPACK_IMPORTED_MODULE_0__.optionDefaults.areas.undisclosed,
         ...this.#strategyOptions.areas.undisclosed,
       };
 
@@ -180,9 +180,9 @@ class Helper {
     });
 
     // Merge the views of the strategy options and the default views.
-    for (const view of Object.keys(_optionDefaults__WEBPACK_IMPORTED_MODULE_0__.optionDefaults.views)) {
+    for (const view of Object.keys(optionDefaults__WEBPACK_IMPORTED_MODULE_0__.optionDefaults.views)) {
       this.#strategyOptions.views[view] = {
-        ..._optionDefaults__WEBPACK_IMPORTED_MODULE_0__.optionDefaults.views[view],
+        ...optionDefaults__WEBPACK_IMPORTED_MODULE_0__.optionDefaults.views[view],
         ...(this.#strategyOptions.views[view]),
       };
     }
@@ -195,9 +195,9 @@ class Helper {
     );
 
     // Merge the domains of the strategy options and the default domains.
-    for (const domain of Object.keys(_optionDefaults__WEBPACK_IMPORTED_MODULE_0__.optionDefaults.domains)) {
+    for (const domain of Object.keys(optionDefaults__WEBPACK_IMPORTED_MODULE_0__.optionDefaults.domains)) {
       this.#strategyOptions.domains[domain] = {
-        ..._optionDefaults__WEBPACK_IMPORTED_MODULE_0__.optionDefaults.domains[domain],
+        ...optionDefaults__WEBPACK_IMPORTED_MODULE_0__.optionDefaults.domains[domain],
         ...(this.#strategyOptions.domains[domain]),
       };
     }
@@ -1305,17 +1305,20 @@ class AreaView extends views_AbstractView__WEBPACK_IMPORTED_MODULE_1__.AbstractV
     subview: true,
   };
 
+  #area = {}
+
   /**
    * Class constructor.
    *
    * @param {viewOptions} [options={}] Options for the view.
    */
-  constructor(options = {}) {
+  constructor(options = {}, area) {
     super();
     this.mergeOptions(
         this.#defaultOptions,
         options,
     );
+    this.#area = area;
   }
 
   /**
@@ -1326,9 +1329,9 @@ class AreaView extends views_AbstractView__WEBPACK_IMPORTED_MODULE_1__.AbstractV
    */
   async createViewCards() {
     const exposedDomainIds = Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.getExposedDomainIds();
-    const area             = this.options.area;
+    const area             = this.#area;
     const viewCards        = [...(area.extra_cards ?? [])];
-    console.log(exposedDomainIds)
+
     // Create cards for each domain.
     for (const domain of exposedDomainIds) {
       if (domain === "default") {
@@ -1343,7 +1346,6 @@ class AreaView extends views_AbstractView__WEBPACK_IMPORTED_MODULE_1__.AbstractV
         domainCards = await __webpack_require__("./src/cards lazy recursive ^\\.\\/.*$")(`./${className}`).then(cardModule => {
           let domainCards = [];
           const entities  = Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.getDeviceEntities(area, domain);
-
           if (entities.length) {
             // Create a Title card for the current domain.
             const titleCard = new cards_TitleCard__WEBPACK_IMPORTED_MODULE_2__.TitleCard(
@@ -1481,9 +1483,7 @@ class AreaView extends views_AbstractView__WEBPACK_IMPORTED_MODULE_1__.AbstractV
     }
 
     // Return cards.
-    return {
-      cards: viewCards,
-    };
+    return viewCards;
   }
 }
 
@@ -1868,9 +1868,8 @@ class JamesStrategy {
       if (!area.hidden) {
         views.push(
           await new areaViewModule["AreaView"]({
-            path: area.area_id ?? area.name,
-            area:area
-          }).getView()
+            path: area.area_id ?? area.name
+          }, area).getView()
         );
       }
     }

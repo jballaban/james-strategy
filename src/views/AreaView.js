@@ -21,17 +21,20 @@ class AreaView extends AbstractView {
     subview: true,
   };
 
+  #area = {}
+
   /**
    * Class constructor.
    *
    * @param {viewOptions} [options={}] Options for the view.
    */
-  constructor(options = {}) {
+  constructor(options = {}, area) {
     super();
     this.mergeOptions(
         this.#defaultOptions,
         options,
     );
+    this.#area = area;
   }
 
   /**
@@ -42,9 +45,9 @@ class AreaView extends AbstractView {
    */
   async createViewCards() {
     const exposedDomainIds = Helper.getExposedDomainIds();
-    const area             = this.options.area;
+    const area             = this.#area;
     const viewCards        = [...(area.extra_cards ?? [])];
-    console.log(exposedDomainIds)
+
     // Create cards for each domain.
     for (const domain of exposedDomainIds) {
       if (domain === "default") {
@@ -59,7 +62,6 @@ class AreaView extends AbstractView {
         domainCards = await import(`cards/${className}`).then(cardModule => {
           let domainCards = [];
           const entities  = Helper.getDeviceEntities(area, domain);
-
           if (entities.length) {
             // Create a Title card for the current domain.
             const titleCard = new TitleCard(
@@ -197,9 +199,7 @@ class AreaView extends AbstractView {
     }
 
     // Return cards.
-    return {
-      cards: viewCards,
-    };
+    return viewCards;
   }
 }
 

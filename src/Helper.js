@@ -1,4 +1,4 @@
-import {optionDefaults} from "./optionDefaults";
+import {optionDefaults} from "optionDefaults";
 
 /**
  * Helper Class

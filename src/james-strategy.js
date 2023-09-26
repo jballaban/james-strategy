@@ -30,9 +30,8 @@ class JamesStrategy {
       if (!area.hidden) {
         views.push(
           await new areaViewModule["AreaView"]({
-            path: area.area_id ?? area.name,
-            area:area
-          }).getView()
+            path: area.area_id ?? area.name
+          }, area).getView()
         );
       }
     }
