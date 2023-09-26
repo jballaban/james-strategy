@@ -1,4 +1,4 @@
-import {AbstractCard} from "./AbstractCard";
+import {AbstractCard} from "cards/AbstractCard";
 
 /**
  * Light Card Class

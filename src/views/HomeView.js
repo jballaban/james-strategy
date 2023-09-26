@@ -1,5 +1,5 @@
-import {Helper} from "../Helper";
-import {AbstractView} from "./AbstractView";
+import {Helper} from "Helper";
+import {AbstractView} from "views/AbstractView";
 
 /**
  * Home View Class.
@@ -88,7 +88,7 @@ class HomeView extends AbstractView {
   #createAreaCards() {
     const groupedCards = [];
 
-    import("../cards/AreaCard").then(areaModule => {
+    import("cards/AreaCard").then(areaModule => {
       const areaCards = [];
 
       for (const area of Helper.areas) {

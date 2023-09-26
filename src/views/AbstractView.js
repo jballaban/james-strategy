@@ -1,5 +1,4 @@
-import {Helper} from "../Helper";
-import {TitleCard} from "../cards/TitleCard";
+import {Helper} from "Helper";
 
 /**
  * Abstract View Class.
@@ -21,13 +20,6 @@ class AbstractView {
     icon: "mdi:view-dashboard",
     subview: false,
   };
-
-  /**
-   * A card to switch all entities in the view.
-   *
-   * @type {Object}
-   */
-  viewTitleCard;
 
   /**
    * Class constructor.
@@ -64,52 +56,7 @@ class AbstractView {
    * @return {Object[] | Promise} An array of card objects.
    */
   async createViewCards() {
-    /** @type Object[] */
-    const viewCards      = [this.viewTitleCard];
-
-    // Create cards for each area.
-    for (const area of Helper.areas) {
-      const areaCards  = [];
-      const entities   = Helper.getDeviceEntities(area, this["domain"]);
-      const className  = Helper.sanitizeClassName(this["domain"] + "Card");
-      const cardModule = await import(`../cards/${className}`);
-
-      // Create a card for each domain-entity of the current area.
-      for (const entity of entities) {
-        let cardOptions = Helper.strategyOptions.card_options?.[entity.entity_id] ?? {};
-
-        if (cardOptions.hidden) {
-          continue;
-        }
-
-        areaCards.push(new cardModule[className](entity, cardOptions).getCard());
-      }
-
-      if (areaCards.length) {
-        // Create a Title card for the current area if it has entities.
-        areaCards.unshift(new TitleCard(
-            [area],
-            {
-              title: area.name,
-              ...this.options["titleCard"],
-            },
-            this["domain"],
-        ).createCard());
-
-        viewCards.push({
-          type: "vertical-stack",
-          cards: areaCards,
-        });
-      }
-    }
-
-    viewCards.unshift(viewCards.length ? this.viewTitleCard : {
-      type: "custom:mushroom-title-card",
-      title: "No Entities Available",
-      subtitle: "They're either hidden by the configuration or by Home Assistant.",
-    });
-
-    return viewCards;
+    return [];
   }
 
   /**

@@ -1,4 +1,4 @@
-import {AbstractCard} from "./AbstractCard";
+import {AbstractCard} from "cards/AbstractCard";
 
 /**
  * Area Card Class
@@ -16,8 +16,8 @@ class AreaCard extends AbstractCard {
    * @private
    */
   #defaultOptions = {
-    type: "custom:mushroom-template-card",
-    primary: undefined,
+    type: "custom:room-card",
+    title: undefined,
     icon: "mdi:texture-box",
     icon_color: "blue",
     tap_action: {
@@ -27,6 +27,24 @@ class AreaCard extends AbstractCard {
     hold_action: {
       action: "none",
     },
+    entities: [
+      {
+        "show_icon": true,
+        "show_state": true,
+        "show_name": false,
+        "icon": {
+          "conditions": [
+            {
+              "condition": "above",
+              "value": 0,
+              "styles": {
+                "color": "yellow"
+              }
+            }
+          ]
+        }
+      }
+    ]
   };
 
   /**
@@ -38,8 +56,9 @@ class AreaCard extends AbstractCard {
    */
   constructor(area, options = {}) {
     super(area);
-    this.#defaultOptions.primary                    = area.name;
+    this.#defaultOptions.title                      = area.name;
     this.#defaultOptions.tap_action.navigation_path = area.area_id ?? area.name;
+    this.#defaultOptions.entities[0].entity         = `sensor.${area.area_id}_lights_on`;
 
     this.mergeOptions(
         this.#defaultOptions,
@@ -47,8 +66,8 @@ class AreaCard extends AbstractCard {
     );
 
     // Override the area's name with a custom name, unless a custom primary text is set.
-    if (!options.primary && options.name) {
-      this.options.primary = options.name;
+    if (!options.title && options.name) {
+      this.options.title = options.name;
     }
   }
 }
