@@ -1161,6 +1161,108 @@ module.exports = webpackAsyncContext;
 
 /***/ }),
 
+/***/ "./src/chips/CoverChip.js":
+/*!********************************!*\
+  !*** ./src/chips/CoverChip.js ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   CoverChip: () => (/* binding */ CoverChip)
+/* harmony export */ });
+/* harmony import */ var Helper__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! Helper */ "./src/Helper.js");
+
+
+class CoverChip {
+  #areaIds;
+  #options = {
+    // No default options.
+  };
+
+  constructor(areaIds, options = {}) {
+    if (!Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.isInitialized()) {
+      throw new Error("The Helper module must be initialized before using this one.");
+    }
+
+    this.#areaIds = areaIds.filter(areaId => areaId);
+    this.#options = {
+      ...this.#options,
+      ...options,
+    };
+  }
+
+  getChip() {
+    return {
+      type: "template",
+      icon: "mdi:window-open",
+      icon_color: "cyan",
+      content: Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.getCountTemplate("cover", "eq", "open"),
+      tap_action: {
+        action: "navigate",
+        navigation_path: "covers",
+      },
+    };
+  }
+}
+
+
+
+
+/***/ }),
+
+/***/ "./src/chips/FanChip.js":
+/*!******************************!*\
+  !*** ./src/chips/FanChip.js ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   FanChip: () => (/* binding */ FanChip)
+/* harmony export */ });
+/* harmony import */ var Helper__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! Helper */ "./src/Helper.js");
+
+
+class FanChip {
+  #areaIds;
+  #options = {
+    // No default options.
+  };
+
+  constructor(areaIds, options = {}) {
+    if (!Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.isInitialized()) {
+      throw new Error("The Helper module must be initialized before using this one.");
+    }
+
+    this.#areaIds = areaIds.filter(areaId => areaId);
+    this.#options = {
+      ...this.#options,
+      ...options,
+    };
+  }
+
+  getChip() {
+    return {
+      type: "template",
+      icon: "mdi:fan",
+      icon_color: "green",
+      content: Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.getCountTemplate("fan", "eq", "on"),
+      tap_action: {
+        action: "navigate",
+        navigation_path: "fans",
+      },
+    };
+  }
+}
+
+
+
+
+/***/ }),
+
 /***/ "./src/chips/LightChip.js":
 /*!********************************!*\
   !*** ./src/chips/LightChip.js ***!
@@ -1219,6 +1321,22 @@ class LightChip {
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 var map = {
+	"./CoverChip": [
+		"./src/chips/CoverChip.js",
+		"main"
+	],
+	"./CoverChip.js": [
+		"./src/chips/CoverChip.js",
+		"main"
+	],
+	"./FanChip": [
+		"./src/chips/FanChip.js",
+		"main"
+	],
+	"./FanChip.js": [
+		"./src/chips/FanChip.js",
+		"main"
+	],
 	"./LightChip": [
 		"./src/chips/LightChip.js",
 		"main"
@@ -1680,33 +1798,36 @@ class DomainView extends views_AbstractView__WEBPACK_IMPORTED_MODULE_1__.Abstrac
    *
    * @return {Object[] | Promise} An array of card objects.
    */
- async createViewCards() {
-  return [
-    {
-      type: "custom:auto-entities",
-      card: {
-        type: "grid",
-        columns: 1,
-        square: false,
-        title: "Lights on"
-      },
-      card_param: "cards",
-      filter: {
-        include: [
-          {
-            domain: this.#domain,
-            state: "on",
-            options: {
-              type: `custom:mushroom-${this.#domain}-card`,
-              show_brightness_control: true,
-              layout: "horizontal"
+  async createViewCards() {
+    let cards = [
+      {
+        type: "custom:auto-entities",
+        card: {
+          type: "grid",
+          columns: 1,
+          square: false,
+          title: `${this.#domain.charAt(0).toUpperCase()}${this.#domain.slice(1)}s on`
+        },
+        card_param: "cards",
+        filter: {
+          include: [
+            {
+              domain: this.#domain,
+              state: `${this.#domain=="cover" ? "open": "on"}`,
+              options: {
+                type: `custom:mushroom-${this.#domain}-card`,
+                show_brightness_control: true,
+                layout: "horizontal"
+              }
             }
-          }
-        ]
+          ]
+        }
       }
-    }
-  ]
-}
+    ];
+    console.log(cards);
+    return cards;
+   
+  }
 }
 
 
@@ -1824,7 +1945,7 @@ class HomeView extends views_AbstractView__WEBPACK_IMPORTED_MODULE_1__.AbstractV
     const chipOptions = Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.strategyOptions.chips;
 
     // TODO: Get domains from config.
-    const exposed_chips = ["light"];
+    const exposed_chips = ["light","fan","cover"];
     // Create a list of area-ids, used for switching all devices via chips
     const areaIds       = Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.areas.map(area => area.area_id);
 
@@ -2161,7 +2282,7 @@ class JamesStrategy {
     let domainViewModule     = await Promise.resolve(/*! import() */).then(__webpack_require__.bind(__webpack_require__, /*! views/DomainView */ "./src/views/DomainView.js"));
 
     // Create subviews for each area.
-    for (let domain of ["light"]) {
+    for (let domain of ["light","fan","cover"]) {
       views.push(
         await new domainViewModule["DomainView"]({
           path: `${domain}s`

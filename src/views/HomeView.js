@@ -95,7 +95,7 @@ class HomeView extends AbstractView {
     const chipOptions = Helper.strategyOptions.chips;
 
     // TODO: Get domains from config.
-    const exposed_chips = ["light"];
+    const exposed_chips = ["light","fan","cover"];
     // Create a list of area-ids, used for switching all devices via chips
     const areaIds       = Helper.areas.map(area => area.area_id);
 

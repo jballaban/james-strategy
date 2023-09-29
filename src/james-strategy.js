@@ -47,7 +47,7 @@ class JamesStrategy {
     let domainViewModule     = await import(`views/DomainView`);
 
     // Create subviews for each area.
-    for (let domain of ["light"]) {
+    for (let domain of ["light","fan","cover"]) {
       views.push(
         await new domainViewModule["DomainView"]({
           path: `${domain}s`

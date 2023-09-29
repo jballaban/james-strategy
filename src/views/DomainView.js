@@ -41,33 +41,36 @@ class DomainView extends AbstractView {
    *
    * @return {Object[] | Promise} An array of card objects.
    */
- async createViewCards() {
-  return [
-    {
-      type: "custom:auto-entities",
-      card: {
-        type: "grid",
-        columns: 1,
-        square: false,
-        title: "Lights on"
-      },
-      card_param: "cards",
-      filter: {
-        include: [
-          {
-            domain: this.#domain,
-            state: "on",
-            options: {
-              type: `custom:mushroom-${this.#domain}-card`,
-              show_brightness_control: true,
-              layout: "horizontal"
+  async createViewCards() {
+    let cards = [
+      {
+        type: "custom:auto-entities",
+        card: {
+          type: "grid",
+          columns: 1,
+          square: false,
+          title: `${this.#domain.charAt(0).toUpperCase()}${this.#domain.slice(1)}s on`
+        },
+        card_param: "cards",
+        filter: {
+          include: [
+            {
+              domain: this.#domain,
+              state: `${this.#domain=="cover" ? "open": "on"}`,
+              options: {
+                type: `custom:mushroom-${this.#domain}-card`,
+                show_brightness_control: true,
+                layout: "horizontal"
+              }
             }
-          }
-        ]
+          ]
+        }
       }
-    }
-  ]
-}
+    ];
+    console.log(cards);
+    return cards;
+   
+  }
 }
 
 export {DomainView};
