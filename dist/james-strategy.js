@@ -381,14 +381,20 @@ class Helper {
       // 1. The linked entity is linked to the given area.
       // 2. The entity is linked to a device, and the linked device is linked to the given area.
       if (
-          (hassEntity?.area_id === area.area_id)
-          || (device && device.area_id === area.area_id)
+          !area || (
+            (hassEntity?.area_id === area.area_id)
+            || (device && device.area_id === area.area_id)
+          )
       ) {
         states.push(state);
       }
     }
 
     return states;
+  }
+
+  static getState(entity_id) {
+    return this.#hassStates[entity_id];
   }
 
   /**
@@ -1155,6 +1161,93 @@ module.exports = webpackAsyncContext;
 
 /***/ }),
 
+/***/ "./src/chips/LightChip.js":
+/*!********************************!*\
+  !*** ./src/chips/LightChip.js ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   LightChip: () => (/* binding */ LightChip)
+/* harmony export */ });
+/* harmony import */ var Helper__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! Helper */ "./src/Helper.js");
+
+
+class LightChip {
+  #areaIds;
+  #options = {
+    // No default options.
+  };
+
+  constructor(areaIds, options = {}) {
+    if (!Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.isInitialized()) {
+      throw new Error("The Helper module must be initialized before using this one.");
+    }
+
+    this.#areaIds = areaIds.filter(areaId => areaId);
+    this.#options = {
+      ...this.#options,
+      ...options,
+    };
+  }
+
+  getChip() {
+    return {
+      type: "template",
+      icon: "mdi:lightbulb-group",
+      icon_color: "amber",
+      content: Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.getCountTemplate("light", "eq", "on"),
+      tap_action: {
+        action: "navigate",
+        navigation_path: "lights",
+      },
+    };
+  }
+}
+
+
+
+
+/***/ }),
+
+/***/ "./src/chips lazy recursive ^\\.\\/.*$":
+/*!***************************************************!*\
+  !*** ./src/chips/ lazy ^\.\/.*$ namespace object ***!
+  \***************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var map = {
+	"./LightChip": [
+		"./src/chips/LightChip.js",
+		"main"
+	],
+	"./LightChip.js": [
+		"./src/chips/LightChip.js",
+		"main"
+	]
+};
+function webpackAsyncContext(req) {
+	if(!__webpack_require__.o(map, req)) {
+		return Promise.resolve().then(() => {
+			var e = new Error("Cannot find module '" + req + "'");
+			e.code = 'MODULE_NOT_FOUND';
+			throw e;
+		});
+	}
+
+	var ids = map[req], id = ids[0];
+	return __webpack_require__.e(ids[1]).then(() => {
+		return __webpack_require__(id);
+	});
+}
+webpackAsyncContext.keys = () => (Object.keys(map));
+webpackAsyncContext.id = "./src/chips lazy recursive ^\\.\\/.*$";
+module.exports = webpackAsyncContext;
+
+/***/ }),
+
 /***/ "./src/optionDefaults.js":
 /*!*******************************!*\
   !*** ./src/optionDefaults.js ***!
@@ -1531,6 +1624,96 @@ class AreaView extends views_AbstractView__WEBPACK_IMPORTED_MODULE_1__.AbstractV
 
 /***/ }),
 
+/***/ "./src/views/DomainView.js":
+/*!*********************************!*\
+  !*** ./src/views/DomainView.js ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   DomainView: () => (/* binding */ DomainView)
+/* harmony export */ });
+/* harmony import */ var Helper__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! Helper */ "./src/Helper.js");
+/* harmony import */ var views_AbstractView__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! views/AbstractView */ "./src/views/AbstractView.js");
+
+
+
+/**
+ * Domain View Class.
+ *
+ * Used to create a Domain view.
+ *
+ * @class DomainView
+ * @extends AbstractView
+ */
+class DomainView extends views_AbstractView__WEBPACK_IMPORTED_MODULE_1__.AbstractView {
+  /**
+   * Default options for the view.
+   * 
+   * @type {viewOptions}
+   * @private
+   */
+  #defaultOptions = {
+    subview: true
+  };
+
+  /**
+   * Class constructor.
+   *
+   * @param {viewOptions} [options={}] Options for the view.
+   */
+  constructor(options = {}, domain = undefined) {
+    super();
+    this.mergeOptions(
+        this.#defaultOptions,
+        options,
+    );
+    this.#domain = domain;
+  }
+
+  #domain = undefined
+
+ /**
+   * Create the cards to include in the view.
+   *
+   * @return {Object[] | Promise} An array of card objects.
+   */
+ async createViewCards() {
+  return [
+    {
+      type: "custom:auto-entities",
+      card: {
+        type: "grid",
+        columns: 1,
+        square: false,
+        title: "Lights on"
+      },
+      card_param: "cards",
+      filter: {
+        include: [
+          {
+            domain: this.#domain,
+            state: "on",
+            options: {
+              type: `custom:mushroom-${this.#domain}-card`,
+              show_brightness_control: true,
+              layout: "horizontal"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
+}
+
+
+
+
+/***/ }),
+
 /***/ "./src/views/HomeView.js":
 /*!*******************************!*\
   !*** ./src/views/HomeView.js ***!
@@ -1590,7 +1773,8 @@ class HomeView extends views_AbstractView__WEBPACK_IMPORTED_MODULE_1__.AbstractV
   async createViewCards() {
     return await Promise.all([
       this.#createAreaCards(),
-    ]).then(([areaCards]) => {
+      this.#createChips()
+    ]).then(([areaCards, chips]) => {
       const options       = Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.strategyOptions;
       const homeViewCards = [
         {
@@ -1608,6 +1792,11 @@ class HomeView extends views_AbstractView__WEBPACK_IMPORTED_MODULE_1__.AbstractV
             action: "none",
           },
         },
+        {
+          type: "custom:mushroom-chips-card",
+          alignment: "center",
+          chips: chips,
+        },
       ];
 
       // Add area cards.
@@ -1623,6 +1812,46 @@ class HomeView extends views_AbstractView__WEBPACK_IMPORTED_MODULE_1__.AbstractV
       return homeViewCards;
     });
   }
+
+  
+  /**
+   * Create the chips to include in the view.
+   *
+   * @return {Object[]} A chip object array.
+   */
+  async #createChips() {
+    const chips       = [];
+    const chipOptions = Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.strategyOptions.chips;
+
+    // TODO: Get domains from config.
+    const exposed_chips = ["light"];
+    // Create a list of area-ids, used for switching all devices via chips
+    const areaIds       = Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.areas.map(area => area.area_id);
+
+    let chipModule;
+
+    // Numeric chips.
+    for (let chipType of exposed_chips) {
+      if (chipOptions?.[`${chipType}_count`] ?? true) {
+        const className = Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.sanitizeClassName(chipType + "Chip");
+        try {
+          chipModule = await __webpack_require__("./src/chips lazy recursive ^\\.\\/.*$")(`./${className}`);
+          const chip = new chipModule[className](areaIds);
+          chips.push(chip.getChip());
+        } catch (e) {
+          console.error(Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.debug ? e : `An error occurred while creating the ${chipType} chip!`);
+        }
+      }
+    }
+
+    // Extra chips.
+    if (chipOptions?.extra_chips) {
+      chips.push(...chipOptions.extra_chips);
+    }
+
+    return chips;
+  }
+
 
   /**
    * Create the area cards to include in the view.
@@ -1733,6 +1962,14 @@ var map = {
 	],
 	"./AreaView.js": [
 		"./src/views/AreaView.js",
+		"main"
+	],
+	"./DomainView": [
+		"./src/views/DomainView.js",
+		"main"
+	],
+	"./DomainView.js": [
+		"./src/views/DomainView.js",
 		"main"
 	],
 	"./HomeView": [
@@ -1919,6 +2156,17 @@ class JamesStrategy {
           );
         }
       }
+    }
+
+    let domainViewModule     = await Promise.resolve(/*! import() */).then(__webpack_require__.bind(__webpack_require__, /*! views/DomainView */ "./src/views/DomainView.js"));
+
+    // Create subviews for each area.
+    for (let domain of ["light"]) {
+      views.push(
+        await new domainViewModule["DomainView"]({
+          path: `${domain}s`
+        }, domain).getView()
+      );
     }
 
     return {

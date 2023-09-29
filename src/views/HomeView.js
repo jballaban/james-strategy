@@ -44,7 +44,8 @@ class HomeView extends AbstractView {
   async createViewCards() {
     return await Promise.all([
       this.#createAreaCards(),
-    ]).then(([areaCards]) => {
+      this.#createChips()
+    ]).then(([areaCards, chips]) => {
       const options       = Helper.strategyOptions;
       const homeViewCards = [
         {
@@ -62,6 +63,11 @@ class HomeView extends AbstractView {
             action: "none",
           },
         },
+        {
+          type: "custom:mushroom-chips-card",
+          alignment: "center",
+          chips: chips,
+        },
       ];
 
       // Add area cards.
@@ -77,6 +83,46 @@ class HomeView extends AbstractView {
       return homeViewCards;
     });
   }
+
+  
+  /**
+   * Create the chips to include in the view.
+   *
+   * @return {Object[]} A chip object array.
+   */
+  async #createChips() {
+    const chips       = [];
+    const chipOptions = Helper.strategyOptions.chips;
+
+    // TODO: Get domains from config.
+    const exposed_chips = ["light"];
+    // Create a list of area-ids, used for switching all devices via chips
+    const areaIds       = Helper.areas.map(area => area.area_id);
+
+    let chipModule;
+
+    // Numeric chips.
+    for (let chipType of exposed_chips) {
+      if (chipOptions?.[`${chipType}_count`] ?? true) {
+        const className = Helper.sanitizeClassName(chipType + "Chip");
+        try {
+          chipModule = await import((`chips/${className}`));
+          const chip = new chipModule[className](areaIds);
+          chips.push(chip.getChip());
+        } catch (e) {
+          console.error(Helper.debug ? e : `An error occurred while creating the ${chipType} chip!`);
+        }
+      }
+    }
+
+    // Extra chips.
+    if (chipOptions?.extra_chips) {
+      chips.push(...chipOptions.extra_chips);
+    }
+
+    return chips;
+  }
+
 
   /**
    * Create the area cards to include in the view.

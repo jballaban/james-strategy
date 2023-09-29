@@ -366,14 +366,20 @@ class Helper {
       // 1. The linked entity is linked to the given area.
       // 2. The entity is linked to a device, and the linked device is linked to the given area.
       if (
-          (hassEntity?.area_id === area.area_id)
-          || (device && device.area_id === area.area_id)
+          !area || (
+            (hassEntity?.area_id === area.area_id)
+            || (device && device.area_id === area.area_id)
+          )
       ) {
         states.push(state);
       }
     }
 
     return states;
+  }
+
+  static getState(entity_id) {
+    return this.#hassStates[entity_id];
   }
 
   /**
