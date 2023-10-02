@@ -67,7 +67,6 @@ class DomainView extends AbstractView {
         }
       }
     ];
-    console.log(cards);
     return cards;
    
   }

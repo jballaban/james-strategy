@@ -21,7 +21,7 @@ class CoverChip {
   getChip() {
     return {
       type: "template",
-      icon: "mdi:window-open",
+      icon: "mdi:blinds",
       icon_color: "cyan",
       content: Helper.getCountTemplate("cover", "eq", "open"),
       tap_action: {

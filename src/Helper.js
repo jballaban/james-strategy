@@ -418,8 +418,8 @@ class Helper {
    */
   static #getObjectKeysByPropertyValue(object, property, value) {
     const keys = [];
-
-    for (const key of Object.keys(object)) {
+ 
+    for (const key of Object.keys(object).reverse()) {
       if (object[key][property] === value) {
         keys.push(key);
       }

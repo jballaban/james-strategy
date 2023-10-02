@@ -433,8 +433,8 @@ class Helper {
    */
   static #getObjectKeysByPropertyValue(object, property, value) {
     const keys = [];
-
-    for (const key of Object.keys(object)) {
+ 
+    for (const key of Object.keys(object).reverse()) {
       if (object[key][property] === value) {
         keys.push(key);
       }
@@ -654,6 +654,7 @@ class AreaCard extends cards_AbstractCard__WEBPACK_IMPORTED_MODULE_1__.AbstractC
     let exposedDomainIds = Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.getExposedDomainIds();
 
     for (let domain of exposedDomainIds) {
+      if (domain == 'default') continue;
       let entity = {
         ...this.#entityOptions,
         ...{
@@ -676,6 +677,123 @@ class AreaCard extends cards_AbstractCard__WEBPACK_IMPORTED_MODULE_1__.AbstractC
     if (!options.title && options.name) {
       this.options.title = options.name;
     }
+
+  }
+}
+
+
+
+
+/***/ }),
+
+/***/ "./src/cards/CoverCard.js":
+/*!********************************!*\
+  !*** ./src/cards/CoverCard.js ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   CoverCard: () => (/* binding */ CoverCard)
+/* harmony export */ });
+/* harmony import */ var cards_AbstractCard__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! cards/AbstractCard */ "./src/cards/AbstractCard.js");
+
+
+/**
+ * Cover Card Class
+ *
+ * Used to create a card for controlling an entity of the cover domain.
+ *
+ * @class
+ * @extends AbstractCard
+ */
+class CoverCard extends cards_AbstractCard__WEBPACK_IMPORTED_MODULE_0__.AbstractCard {
+  /**
+   * Default options of the card.
+   *
+   * @type {coverCardOptions}
+   * @private
+   */
+  #defaultOptions = {
+    type: "custom:mushroom-cover-card",
+    icon: undefined,
+    show_buttons_control: true,
+    show_position_control: true,
+    show_tilt_position_control: true,
+  };
+
+  /**
+   * Class constructor.
+   *
+   * @param {hassEntity} entity The hass entity to create a card for.
+   * @param {coverCardOptions} [options={}] Options for the card.
+   * @throws {Error} If the Helper module isn't initialized.
+   */
+  constructor(entity, options = {}) {
+    super(entity);
+    this.mergeOptions(
+        this.#defaultOptions,
+        options,
+    );
+  }
+}
+
+
+
+
+/***/ }),
+
+/***/ "./src/cards/FanCard.js":
+/*!******************************!*\
+  !*** ./src/cards/FanCard.js ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   FanCard: () => (/* binding */ FanCard)
+/* harmony export */ });
+/* harmony import */ var cards_AbstractCard__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! cards/AbstractCard */ "./src/cards/AbstractCard.js");
+
+
+/**
+ * Fan Card Class
+ *
+ * Used to create a card for controlling an entity of the fan domain.
+ *
+ * @class
+ * @extends AbstractCard
+ */
+class FanCard extends cards_AbstractCard__WEBPACK_IMPORTED_MODULE_0__.AbstractCard {
+  /**
+   * Default options of the card.
+   *
+   * @type {fanCardOptions}
+   * @private
+   */
+  #defaultOptions = {
+    type: "custom:mushroom-fan-card",
+    icon: undefined,
+    show_percentage_control: true,
+    show_oscillate_control: true,
+    icon_animation: true,
+  };
+
+  /**
+   * Class constructor.
+   *
+   * @param {hassEntity} entity The hass entity to create a card for.
+   * @param {fanCardOptions} [options={}] Options for the card.
+   * @throws {Error} If the Helper module isn't initialized.
+   */
+  constructor(entity, options = {}) {
+    super(entity);
+    this.mergeOptions(
+        this.#defaultOptions,
+        options,
+    );
   }
 }
 
@@ -1102,6 +1220,26 @@ var map = {
 		9,
 		"main"
 	],
+	"./CoverCard": [
+		"./src/cards/CoverCard.js",
+		9,
+		"main"
+	],
+	"./CoverCard.js": [
+		"./src/cards/CoverCard.js",
+		9,
+		"main"
+	],
+	"./FanCard": [
+		"./src/cards/FanCard.js",
+		9,
+		"main"
+	],
+	"./FanCard.js": [
+		"./src/cards/FanCard.js",
+		9,
+		"main"
+	],
 	"./LightCard": [
 		"./src/cards/LightCard.js",
 		9,
@@ -1196,7 +1334,7 @@ class CoverChip {
   getChip() {
     return {
       type: "template",
-      icon: "mdi:window-open",
+      icon: "mdi:blinds",
       icon_color: "cyan",
       content: Helper__WEBPACK_IMPORTED_MODULE_0__.Helper.getCountTemplate("cover", "eq", "open"),
       tap_action: {
@@ -1407,6 +1545,24 @@ const optionDefaults = {
       offService: "light.turn_off",
       hidden: false,
     },
+    fan: {
+      title: "Fans",
+      showControls: true,
+      iconOn: "mdi:fan",
+      iconOff: "mdi:fan-off",
+      onService: "fan.turn_on",
+      offService: "fan.turn_off",
+      hidden: false,
+    },
+    cover: {
+      title: "Covers",
+      showControls: true,
+      iconOn: "mdi:arrow-up",
+      iconOff: "mdi:arrow-down",
+      onService: "cover.open_cover",
+      offService: "cover.close_cover",
+      hidden: false,
+    }
   }
 }
 
@@ -1824,7 +1980,6 @@ class DomainView extends views_AbstractView__WEBPACK_IMPORTED_MODULE_1__.Abstrac
         }
       }
     ];
-    console.log(cards);
     return cards;
    
   }

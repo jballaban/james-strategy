@@ -67,6 +67,7 @@ class AreaCard extends AbstractCard {
     let exposedDomainIds = Helper.getExposedDomainIds();
 
     for (let domain of exposedDomainIds) {
+      if (domain == 'default') continue;
       let entity = {
         ...this.#entityOptions,
         ...{
@@ -89,6 +90,7 @@ class AreaCard extends AbstractCard {
     if (!options.title && options.name) {
       this.options.title = options.name;
     }
+
   }
 }
 
