@@ -4,7 +4,7 @@ class MarkdownCard {
 		this.content = content;
 	}
 
-	render() {
+	render(info) {
 		return {
 			"type": "markdown",
 			"content": this.content

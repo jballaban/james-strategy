@@ -1,6 +1,7 @@
-import { settings } from '../src/settings.js';
-import YAML from 'yaml';
-import fs from 'fs';
+const YAML = require('yaml')
+const fs = require('fs');
 
-fs.writeFileSync('./dist/sensors.yaml', YAML.stringify([{"sensor":settings.sensors}], null, 2));
-console.log('done');
+import("./settings.mjs").then((module) => {
+	fs.writeFileSync('./dist/sensors.yaml', YAML.stringify([{"sensor":module.settings.sensors}], null, 2));
+	console.log('done');
+});

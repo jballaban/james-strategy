@@ -18,9 +18,9 @@ class HomeView {
 	async generateCards(info) {
 		return [
 			new ChipsCard([
-				new EntityChip("sensor.james_lights_on", "mdi:lightbulb")
-			]).render(),
-			new MarkdownCard(`HomeView Generated at ${(new Date).toLocaleString()}`).render()
+				new EntityChip("sensor.james_lights_on", "mdi:lightbulb", "yellow", "lights")
+			]).render(info),
+			new MarkdownCard(`HomeView Generated at ${(new Date).toLocaleString()}`).render(info)
 		];
 	}
 

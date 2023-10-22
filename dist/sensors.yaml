@@ -2,3 +2,6 @@
     - name: James Lights On
       icon: mdi:lightbulb-group
       state: "{{ states.light | selectattr('state','eq','on') | list | count }}"
+    - name: James Lights Off
+      icon: mdi:lightbulb-group
+      state: "{{ states.light | selectattr('state','eq','off') | list | count }}"
