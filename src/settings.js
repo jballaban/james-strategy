@@ -1,7 +1,8 @@
 export const settings = {
 	debug: true,
 	views: [
-		"HomeView"
+		"HomeView",
+		"DevicesView"
 	],
 	sensors: [
 		{

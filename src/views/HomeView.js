@@ -3,18 +3,19 @@ import { ChipsCard, EntityChip } from "cards/ChipsCard.js";
 
 class HomeView {
 
-	async generateView(info) {
+	async generateViews(info) {
 		const { areas, devices, entities } = info.view.strategy.options;
-		return {
+		return [{
 			strategy: {
 				type: "custom:james",
 				options: { areas, devices, entities, name: "HomeView" },
 			},
+			title: "Home",
 			path: "home"
-		}
+		}];
 	}
 
-	async generateCards() {
+	async generateCards(info) {
 		return [
 			new ChipsCard([
 				new EntityChip("sensor.james_lights_on", "mdi:lightbulb")

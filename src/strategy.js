@@ -24,8 +24,8 @@ class JamesStrategy {
 
 		for (let viewName of settings.views) {
 			const viewModule = await import(`views/${viewName}.js`);
-			let view = await new viewModule[viewName]().generateView(info);
-			views.push(view);
+			let subviews = await new viewModule[viewName]().generateViews(info);
+			views.push(...subviews);
 		}
 
 		return {

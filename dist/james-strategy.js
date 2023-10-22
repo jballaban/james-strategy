@@ -41,6 +41,50 @@ module.exports = webpackAsyncContext;
 
 /***/ }),
 
+/***/ "./src/cards/AutoEntitiesCard.js":
+/*!***************************************!*\
+  !*** ./src/cards/AutoEntitiesCard.js ***!
+  \***************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   AutoEntitiesCard: () => (/* binding */ AutoEntitiesCard)
+/* harmony export */ });
+class AutoEntitiesCard {
+	
+	constructor() {}
+
+	render() {
+		return {
+			"type": "custom:auto-entities",
+			"card": {
+				"type": "grid",
+				"columns": 2,
+				"square": false,
+			},
+			"card_param": "cards",
+			"filter": {
+				"include": [
+					{
+						"domain": "light",
+						"state": "on",
+						"options": {
+							"type": "custom:mushroom-light-card",
+							"show_brightness_control": true
+						}
+					}
+				]
+			}
+		};
+	}
+}
+
+
+
+/***/ }),
+
 /***/ "./src/cards/ChipsCard.js":
 /*!********************************!*\
   !*** ./src/cards/ChipsCard.js ***!
@@ -147,7 +191,8 @@ __webpack_require__.r(__webpack_exports__);
 const settings = {
 	debug: true,
 	views: [
-		"HomeView"
+		"HomeView",
+		"DevicesView"
 	],
 	sensors: [
 		{
@@ -168,6 +213,34 @@ const settings = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   DevicesView: () => (/* binding */ DevicesView)
+/* harmony export */ });
+/* harmony import */ var cards_AutoEntitiesCard_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! cards/AutoEntitiesCard.js */ "./src/cards/AutoEntitiesCard.js");
+
+
+class DevicesView {
+
+	async generateViews(info) {
+		const { areas, devices, entities } = info.view.strategy.options;
+		return [{
+			strategy: {
+				type: "custom:james",
+				options: { areas, devices, entities, name: "DevicesView", device: "lights" },
+			},
+			title: "Lights",
+			path: "lights"
+		}];
+	}
+
+	async generateCards(info) {
+		return [
+			new cards_AutoEntitiesCard_js__WEBPACK_IMPORTED_MODULE_0__.AutoEntitiesCard().render()
+		];
+	}
+
+}
+
 
 
 /***/ }),
@@ -190,18 +263,19 @@ __webpack_require__.r(__webpack_exports__);
 
 class HomeView {
 
-	async generateView(info) {
+	async generateViews(info) {
 		const { areas, devices, entities } = info.view.strategy.options;
-		return {
+		return [{
 			strategy: {
 				type: "custom:james",
 				options: { areas, devices, entities, name: "HomeView" },
 			},
+			title: "Home",
 			path: "home"
-		}
+		}];
 	}
 
-	async generateCards() {
+	async generateCards(info) {
 		return [
 			new cards_ChipsCard_js__WEBPACK_IMPORTED_MODULE_1__.ChipsCard([
 				new cards_ChipsCard_js__WEBPACK_IMPORTED_MODULE_1__.EntityChip("sensor.james_lights_on", "mdi:lightbulb")
@@ -337,8 +411,8 @@ class JamesStrategy {
 
 		for (let viewName of settings_js__WEBPACK_IMPORTED_MODULE_0__.settings.views) {
 			const viewModule = await __webpack_require__("./src/views lazy recursive ^\\.\\/.*\\.js$")(`./${viewName}.js`);
-			let view = await new viewModule[viewName]().generateView(info);
-			views.push(view);
+			let subviews = await new viewModule[viewName]().generateViews(info);
+			views.push(...subviews);
 		}
 
 		return {
