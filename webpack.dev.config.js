@@ -4,7 +4,7 @@ const webpack = require("webpack");
 module.exports = {
   mode: "development",
   devtool: "source-map",
-  entry: "./src/james-strategy.js",
+  entry: "./src/strategy.js",
   resolve: { 
     modules: [path.resolve(__dirname, 'src'), 'node_modules'] 
   },

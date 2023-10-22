@@ -20,14 +20,21 @@
   },
   "devDependencies": {
     "webpack": "^5.88.2",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "write-yaml-file": "^5.0.0"
   },
   "scripts": {
     "build": "webpack",
-    "build-dev": "webpack --config webpack.dev.config.js"
+    "build-dev": "webpack --config webpack.dev.config.js",
+    "watch": "webpack --watch --config webpack.dev.config.js",
+    "generate": "node ./scripts/generate.js"
   },
   "main": "webpack.config.js",
   "directories": {
     "doc": "docs"
+  },
+  "type": "module",
+  "dependencies": {
+    "yaml": "^2.3.3"
   }
 }
