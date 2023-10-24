@@ -4,7 +4,13 @@ export const settings = {
 		"Basement Bathroom",
 		"Shop",
 		"Basement Hallway",
-		"Rec Room"
+		"Rec Room",
+		"Front Foyer",
+		"Bay Window",
+		"Dining Room",
+		"Hallway",
+		"Kitchen",
+		"Family Room"
 	],
 	views: [
 		"HomeView",

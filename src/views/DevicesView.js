@@ -41,7 +41,6 @@ class DevicesView {
 		result.push(
 			new VerticalStackCard(areaCards).render(info)
 		);
-		console.log(result);
 		return result;
 	}
 
