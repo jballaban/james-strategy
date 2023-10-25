@@ -1,7 +1,13 @@
 - sensor:
     - name: James Lights On
-      icon: mdi:lightbulb-group
       state: "{{ states.light | selectattr('state','eq','on') | list | count }}"
     - name: James Lights Off
-      icon: mdi:lightbulb-group
       state: "{{ states.light | selectattr('state','eq','off') | list | count }}"
+    - name: James Fans On
+      state: "{{ states.fan | selectattr('state','eq','on') | list | count }}"
+    - name: James Fans Off
+      state: "{{ states.fan | selectattr('state','eq','off') | list | count }}"
+    - name: James Covers On
+      state: "{{ states.cover | selectattr('state','eq','open') | list | count }}"
+    - name: James Covers Off
+      state: "{{ states.cover | selectattr('state','eq','closed') | list | count }}"

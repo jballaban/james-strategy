@@ -14,9 +14,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 class AutoEntitiesCard {
 	
-	constructor(state, area_id) {
+	constructor(state, area_id, domain) {
 		this.state = state;
 		this.area_id = area_id;
+		this.domain = domain;
 	}
 
 	render(info) {
@@ -28,17 +29,15 @@ class AutoEntitiesCard {
 			},
 			"filter": {
 				"template": `
-{%- for light in expand(area_entities('${this.area_id}'))
-				 |selectattr('domain','eq','light')
+{%- for entity in expand(area_entities('${this.area_id}'))
+				 |selectattr('domain','eq','${this.domain.name}')
 				 |selectattr('state','eq','${this.state}')
 				 |list -%} 
 	{{
 		{
-			'entity': light.entity_id,
-			'name': light.attributes.friendly_name|replace("${this.area_id} ","")|replace("Lights","")|replace("Light",""),
-			'type': 'custom:mushroom-light-card',
-			'show_brightness_control': true,
-			'layout': 'horizontal'
+			'entity': entity.entity_id,
+			'name': entity.attributes.friendly_name|replace("${this.area_id} ","")|replace("${this.domain.name}",""),
+			${JSON.stringify(this.domain.card).replace(/^\{/,"").replace(/\}$/,"")}
 		}
 	}},
 {%- endfor -%}`,
@@ -63,7 +62,8 @@ class AutoEntitiesCard {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ChipsCard: () => (/* binding */ ChipsCard),
-/* harmony export */   EntityChip: () => (/* binding */ EntityChip)
+/* harmony export */   EntityChip: () => (/* binding */ EntityChip),
+/* harmony export */   TemplateChip: () => (/* binding */ TemplateChip)
 /* harmony export */ });
 class TemplateChip {
 	
@@ -207,29 +207,91 @@ const settings = {
 	areas: [
 		"Basement Bathroom",
 		"Shop",
+		"Gym",
 		"Basement Hallway",
 		"Rec Room",
 		"Front Foyer",
+		"Powder Room",
 		"Bay Window",
 		"Dining Room",
 		"Hallway",
+		"Mud Room",
 		"Kitchen",
-		"Family Room"
+		"Family Room",
+		"Garage",
+		"Upstairs Hallway",
+		"Master Bedroom",
+		"Master Bathroom",
+		"Laundry Room",
+		"Office",
+		"Lola Bedroom",
+		"Lukas Bedroom",
+		"Kids Bathroom",
+		"Exterior",
+		"Cabana"
 	],
 	views: [
 		"HomeView",
 		"DevicesView"
 	],
+	domains: [
+		{ 
+			name: "light", 
+			title: "Lights", 
+			on: "on", 
+			off: "off", 
+			icon: "mdi:lightbulb", 
+			card: {
+				"type": "custom:mushroom-light-card",
+				"show_brightness_control": true,
+				"layout": "horizontal"
+			}
+		},
+		{ 
+			name: "fan", 
+			title: "Fans", 
+			on: "on", 
+			off: "off", 
+			icon: "mdi:fan",
+			card: {
+				"type": "custom:mushroom-fan-card"
+			}
+		},
+		{ 
+			name: "cover", 
+			title: "Covers", 
+			on: "open", 
+			off: "closed", 
+			icon: "mdi:blinds",
+			card: {
+				"type": "custom:mushroom-cover-card"
+			}
+		},
+	],
 	sensors: [
 		{
 			"name": "James Lights On",
-			"icon": "mdi:lightbulb-group",
 			"state": "{{ states.light | selectattr('state','eq','on') | list | count }}"
 		},
 		{
 			"name": "James Lights Off",
-			"icon": "mdi:lightbulb-group",
 			"state": "{{ states.light | selectattr('state','eq','off') | list | count }}"
+		},
+		{
+			"name": "James Fans On",
+			"state": "{{ states.fan | selectattr('state','eq','on') | list | count }}"
+		},
+		{
+			"name": "James Fans Off",
+			"state": "{{ states.fan | selectattr('state','eq','off') | list | count }}"
+		},
+		{
+			"name": "James Covers On",
+			"state": "{{ states.cover | selectattr('state','eq','open') | list | count }}"
+		},
+		{
+			"name": "James Covers Off",
+			"state": "{{ states.cover | selectattr('state','eq','closed') | list | count }}"
 		}
 	]
 }
@@ -260,36 +322,41 @@ class DevicesView {
 
 	async generateViews(info) {
 		const { areas, devices, entities } = info.view.strategy.options;
-		return [{
-			strategy: {
-				type: "custom:james",
-				options: { areas, devices, entities, name: "DevicesView", device: "lights", state: "on" },
-			},
-			title: "Lights",
-			path: "lights",
-			subview: "true"
-		}, {
-			strategy: {
-				type: "custom:james",
-				options: { areas, devices, entities, name: "DevicesView", device: "lights", state: "off" },
-			},
-			title: "Lights Off",
-			path: "lights_off",
-			subview: "true"
-		}];
+		let result = [];
+		settings_js__WEBPACK_IMPORTED_MODULE_2__.settings.domains.forEach((item) => {
+			result.push({
+				strategy: {
+					type: "custom:james",
+					options: { areas, devices, entities, name: "DevicesView", domain: item, state: item.on},
+				},
+				title: item.title,
+				path: item.name,
+				icon: item.icon
+			});
+			result.push({
+				strategy: {
+					type: "custom:james",
+					options: { areas, devices, entities, name: "DevicesView", domain: item, state: item.off },
+				},
+				title: `${item.title} Off`,
+				path: `${item.name}_off`,
+				subview: true
+			});
+		});
+		return result;
 	}
 
 	async generateCards(info) {
 		let result = [
 			new cards_ChipsCard__WEBPACK_IMPORTED_MODULE_1__.ChipsCard([
-				new cards_ChipsCard__WEBPACK_IMPORTED_MODULE_1__.EntityChip(`sensor.james_lights_on`, "mdi:lightbulb", "yellow", "lights"),
-				new cards_ChipsCard__WEBPACK_IMPORTED_MODULE_1__.EntityChip(`sensor.james_lights_off`, "mdi:lightbulb", "red", "lights_off")
+				new cards_ChipsCard__WEBPACK_IMPORTED_MODULE_1__.EntityChip(`sensor.james_${info.view.strategy.options.domain.name}s_on`, info.view.strategy.options.domain.icon, "yellow", info.view.strategy.options.domain.name),
+				new cards_ChipsCard__WEBPACK_IMPORTED_MODULE_1__.EntityChip(`sensor.james_${info.view.strategy.options.domain.name}s_off`, info.view.strategy.options.domain.icon, "red", `${info.view.strategy.options.domain.name}_off`)
 			]).render(info)
 		];
 		
 		let areaCards = [];
 		for (let area_id of settings_js__WEBPACK_IMPORTED_MODULE_2__.settings.areas) {
-			areaCards.push(new cards_AutoEntitiesCard_js__WEBPACK_IMPORTED_MODULE_0__.AutoEntitiesCard(info.view.strategy.options.state, area_id).render(info));
+			areaCards.push(new cards_AutoEntitiesCard_js__WEBPACK_IMPORTED_MODULE_0__.AutoEntitiesCard(info.view.strategy.options.state, area_id, info.view.strategy.options.domain).render(info));
 		}
 		result.push(
 			new cards_VerticalStackCard__WEBPACK_IMPORTED_MODULE_3__.VerticalStackCard(areaCards).render(info)
@@ -316,6 +383,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var cards_MarkdownCard_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! cards/MarkdownCard.js */ "./src/cards/MarkdownCard.js");
 /* harmony import */ var cards_ChipsCard_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! cards/ChipsCard.js */ "./src/cards/ChipsCard.js");
+/* harmony import */ var settings_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! settings.js */ "./src/settings.js");
+
 
 
 
@@ -329,15 +398,18 @@ class HomeView {
 				options: { areas, devices, entities, name: "HomeView" },
 			},
 			title: "Home",
-			path: "home"
+			path: "home",
+			icon: "mdi:home"
 		}];
 	}
 
 	async generateCards(info) {
 		return [
-			new cards_ChipsCard_js__WEBPACK_IMPORTED_MODULE_1__.ChipsCard([
-				new cards_ChipsCard_js__WEBPACK_IMPORTED_MODULE_1__.EntityChip("sensor.james_lights_on", "mdi:lightbulb", "yellow", "lights")
-			]).render(info),
+			new cards_ChipsCard_js__WEBPACK_IMPORTED_MODULE_1__.ChipsCard(
+				settings_js__WEBPACK_IMPORTED_MODULE_2__.settings.domains.map(item => {
+					return new cards_ChipsCard_js__WEBPACK_IMPORTED_MODULE_1__.EntityChip(`sensor.james_${item.name}s_on`, item.icon, "yellow", item.name)
+				})
+			).render(info),
 			new cards_MarkdownCard_js__WEBPACK_IMPORTED_MODULE_0__.MarkdownCard(`HomeView Generated at ${(new Date).toLocaleString()}`).render(info)
 		];
 	}

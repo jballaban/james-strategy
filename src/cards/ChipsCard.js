@@ -62,4 +62,4 @@ class ChipsCard {
 	
 }
 
-export {ChipsCard, EntityChip};
+export {ChipsCard, EntityChip, TemplateChip};

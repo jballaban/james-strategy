@@ -1,5 +1,6 @@
 import { MarkdownCard } from "cards/MarkdownCard.js";
 import { ChipsCard, EntityChip } from "cards/ChipsCard.js";
+import { settings } from 'settings.js'
 
 class HomeView {
 
@@ -11,15 +12,18 @@ class HomeView {
 				options: { areas, devices, entities, name: "HomeView" },
 			},
 			title: "Home",
-			path: "home"
+			path: "home",
+			icon: "mdi:home"
 		}];
 	}
 
 	async generateCards(info) {
 		return [
-			new ChipsCard([
-				new EntityChip("sensor.james_lights_on", "mdi:lightbulb", "yellow", "lights")
-			]).render(info),
+			new ChipsCard(
+				settings.domains.map(item => {
+					return new EntityChip(`sensor.james_${item.name}s_on`, item.icon, "yellow", item.name)
+				})
+			).render(info),
 			new MarkdownCard(`HomeView Generated at ${(new Date).toLocaleString()}`).render(info)
 		];
 	}

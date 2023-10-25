@@ -1,8 +1,9 @@
 class AutoEntitiesCard {
 	
-	constructor(state, area_id) {
+	constructor(state, area_id, domain) {
 		this.state = state;
 		this.area_id = area_id;
+		this.domain = domain;
 	}
 
 	render(info) {
@@ -14,17 +15,15 @@ class AutoEntitiesCard {
 			},
 			"filter": {
 				"template": `
-{%- for light in expand(area_entities('${this.area_id}'))
-				 |selectattr('domain','eq','light')
+{%- for entity in expand(area_entities('${this.area_id}'))
+				 |selectattr('domain','eq','${this.domain.name}')
 				 |selectattr('state','eq','${this.state}')
 				 |list -%} 
 	{{
 		{
-			'entity': light.entity_id,
-			'name': light.attributes.friendly_name|replace("${this.area_id} ","")|replace("Lights","")|replace("Light",""),
-			'type': 'custom:mushroom-light-card',
-			'show_brightness_control': true,
-			'layout': 'horizontal'
+			'entity': entity.entity_id,
+			'name': entity.attributes.friendly_name|replace("${this.area_id} ","")|replace("${this.domain.name}",""),
+			${JSON.stringify(this.domain.card).replace(/^\{/,"").replace(/\}$/,"")}
 		}
 	}},
 {%- endfor -%}`,
