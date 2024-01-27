@@ -7,6 +7,11 @@ class AutoEntitiesCard {
 	}
 
 	render(info) {
+		let filters = [];
+		filters.push(`selectattr('domain','eq','${this.domain.name}')`);
+		if (this.state) {
+			filters.push(`selectattr('state','eq','${this.state}')`);
+		}
 		let result = {
 			"type": "custom:auto-entities",
 			"card": {
@@ -16,8 +21,7 @@ class AutoEntitiesCard {
 			"filter": {
 				"template": `
 {%- for entity in expand(area_entities('${this.area_id}'))
-				 |selectattr('domain','eq','${this.domain.name}')
-				 |selectattr('state','eq','${this.state}')
+				 |${filters.join(`|\n`)}
 				 |list -%} 
 	{{
 		{

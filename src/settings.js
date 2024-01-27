@@ -1,5 +1,56 @@
 export const settings = {
 	debug: true,
+	levels: [
+		{
+			"title": "Basement",
+			"icon": "mdi:home-floor-negative-1",
+			"name": "basement",
+			"areas": [
+				"Basement Bathroom",
+				"Shop",
+				"Gym",
+				"Basement Hallway",
+				"Rec Room"
+			]
+		}, {
+			"title": "Main Floor",
+			"icon": "mdi:home-floor-0",
+			"name": "main",
+			"areas": [
+				"Front Foyer",
+				"Powder Room",
+				"Bay Window",
+				"Dining Room",
+				"Hallway",
+				"Mud Room",
+				"Kitchen",
+				"Family Room",
+				"Garage"
+			]
+		}, {
+			"title": "Upstairs",
+			"icon": "mdi:home-floor-1",
+			"name": "upstairs",
+			"areas": [
+				"Upstairs Hallway",
+				"Master Bedroom",
+				"Master Bathroom",
+				"Laundry Room",
+				"Office",
+				"Lola Bedroom",
+				"Lukas Bedroom",
+				"Kids Bathroom"
+			]
+		}, {
+			"title": "Outside",
+			"icon": "mdi:home-floor-g",
+			"name": "outside",
+			"areas": [
+				"Exterior",
+				"Cabana"
+			]
+		}
+	],
 	areas: [
 		"Basement Bathroom",
 		"Shop",
