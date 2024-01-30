@@ -38,7 +38,7 @@ class DevicesView {
 			new EntityChip(`sensor.james_${info.view.strategy.options.domain.name}s_on`, info.view.strategy.options.domain.icon, "yellow", info.view.strategy.options.domain.name),
 		];
 		for (let level of settings.levels) {
-			chips.push(new EntityChip(`sensor.james_${level.name$}_${info.view.strategy.options.domain.name}s_on`, level.icon, info.view.strategy.options.level?.name==level.name ? "green" : "blue", `${level.name}-${info.view.strategy.options.domain.name}`));
+			chips.push(new EntityChip(`sensor.james_${level.name}_${info.view.strategy.options.domain.name}s_on`, level.icon, info.view.strategy.options.level?.name==level.name ? "green" : "blue", `${level.name}-${info.view.strategy.options.domain.name}`));
 		}
 
 		let result = [

@@ -399,7 +399,7 @@ class DevicesView {
 			new cards_ChipsCard__WEBPACK_IMPORTED_MODULE_1__.EntityChip(`sensor.james_${info.view.strategy.options.domain.name}s_on`, info.view.strategy.options.domain.icon, "yellow", info.view.strategy.options.domain.name),
 		];
 		for (let level of settings_js__WEBPACK_IMPORTED_MODULE_2__.settings.levels) {
-			chips.push(new cards_ChipsCard__WEBPACK_IMPORTED_MODULE_1__.EntityChip(`sensor.james_${level.name$}_${info.view.strategy.options.domain.name}s_on`, level.icon, info.view.strategy.options.level?.name==level.name ? "green" : "blue", `${level.name}-${info.view.strategy.options.domain.name}`));
+			chips.push(new cards_ChipsCard__WEBPACK_IMPORTED_MODULE_1__.EntityChip(`sensor.james_${level.name}_${info.view.strategy.options.domain.name}s_on`, level.icon, info.view.strategy.options.level?.name==level.name ? "green" : "blue", `${level.name}-${info.view.strategy.options.domain.name}`));
 		}
 
 		let result = [
