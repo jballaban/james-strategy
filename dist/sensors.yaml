@@ -1,13 +1,79 @@
 - sensor:
     - name: James Lights On
       state: "{{ states.light | selectattr('state','eq','on') | list | count }}"
-    - name: James Lights Off
-      state: "{{ states.light | selectattr('state','eq','off') | list | count }}"
+      domain: light
+    - name: James Basement Lights On
+      state: "{{ expand(area_entities('Basement Bathroom'), area_entities('Shop'),
+        area_entities('Gym'), area_entities('Basement Hallway'),
+        area_entities('Rec Room')) | select('match', 'light') |
+        selectattr('state','eq','on') | list | count }}"
+    - name: James Main Lights On
+      state: "{{ expand(area_entities('Front Foyer'), area_entities('Powder Room'),
+        area_entities('Bay Window'), area_entities('Dining Room'),
+        area_entities('Hallway'), area_entities('Mud Room'),
+        area_entities('Kitchen'), area_entities('Family Room'),
+        area_entities('Garage')) | select('match', 'light') |
+        selectattr('state','eq','on') | list | count }}"
+    - name: James Upstairs Lights On
+      state: "{{ expand(area_entities('Upstairs Hallway'), area_entities('Master
+        Bedroom'), area_entities('Master Bathroom'), area_entities('Laundry
+        Room'), area_entities('Office'), area_entities('Lola Bedroom'),
+        area_entities('Lukas Bedroom'), area_entities('Kids Bathroom')) |
+        select('match', 'light') | selectattr('state','eq','on') | list | count
+        }}"
+    - name: James Outside Lights On
+      state: "{{ expand(area_entities('Exterior'), area_entities('Cabana')) |
+        select('match', 'light') | selectattr('state','eq','on') | list | count
+        }}"
     - name: James Fans On
       state: "{{ states.fan | selectattr('state','eq','on') | list | count }}"
-    - name: James Fans Off
-      state: "{{ states.fan | selectattr('state','eq','off') | list | count }}"
+      domain: fan
+    - name: James Basement Fans On
+      state: "{{ expand(area_entities('Basement Bathroom'), area_entities('Shop'),
+        area_entities('Gym'), area_entities('Basement Hallway'),
+        area_entities('Rec Room')) | select('match', 'fan') |
+        selectattr('state','eq','on') | list | count }}"
+    - name: James Main Fans On
+      state: "{{ expand(area_entities('Front Foyer'), area_entities('Powder Room'),
+        area_entities('Bay Window'), area_entities('Dining Room'),
+        area_entities('Hallway'), area_entities('Mud Room'),
+        area_entities('Kitchen'), area_entities('Family Room'),
+        area_entities('Garage')) | select('match', 'fan') |
+        selectattr('state','eq','on') | list | count }}"
+    - name: James Upstairs Fans On
+      state: "{{ expand(area_entities('Upstairs Hallway'), area_entities('Master
+        Bedroom'), area_entities('Master Bathroom'), area_entities('Laundry
+        Room'), area_entities('Office'), area_entities('Lola Bedroom'),
+        area_entities('Lukas Bedroom'), area_entities('Kids Bathroom')) |
+        select('match', 'fan') | selectattr('state','eq','on') | list | count
+        }}"
+    - name: James Outside Fans On
+      state: "{{ expand(area_entities('Exterior'), area_entities('Cabana')) |
+        select('match', 'fan') | selectattr('state','eq','on') | list | count
+        }}"
     - name: James Covers On
       state: "{{ states.cover | selectattr('state','eq','open') | list | count }}"
-    - name: James Covers Off
-      state: "{{ states.cover | selectattr('state','eq','closed') | list | count }}"
+      domain: cover
+    - name: James Basement Covers On
+      state: "{{ expand(area_entities('Basement Bathroom'), area_entities('Shop'),
+        area_entities('Gym'), area_entities('Basement Hallway'),
+        area_entities('Rec Room')) | select('match', 'cover') |
+        selectattr('state','eq','open') | list | count }}"
+    - name: James Main Covers On
+      state: "{{ expand(area_entities('Front Foyer'), area_entities('Powder Room'),
+        area_entities('Bay Window'), area_entities('Dining Room'),
+        area_entities('Hallway'), area_entities('Mud Room'),
+        area_entities('Kitchen'), area_entities('Family Room'),
+        area_entities('Garage')) | select('match', 'cover') |
+        selectattr('state','eq','open') | list | count }}"
+    - name: James Upstairs Covers On
+      state: "{{ expand(area_entities('Upstairs Hallway'), area_entities('Master
+        Bedroom'), area_entities('Master Bathroom'), area_entities('Laundry
+        Room'), area_entities('Office'), area_entities('Lola Bedroom'),
+        area_entities('Lukas Bedroom'), area_entities('Kids Bathroom')) |
+        select('match', 'cover') | selectattr('state','eq','open') | list |
+        count }}"
+    - name: James Outside Covers On
+      state: "{{ expand(area_entities('Exterior'), area_entities('Cabana')) |
+        select('match', 'cover') | selectattr('state','eq','open') | list |
+        count }}"

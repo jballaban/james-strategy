@@ -207,8 +207,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   settings: () => (/* binding */ settings)
 /* harmony export */ });
 const settings = {
-	debug: true,
-	levels: [
+	"debug": true,
+	"levels": [
 		{
 			"title": "Basement",
 			"icon": "mdi:home-floor-negative-1",
@@ -259,7 +259,7 @@ const settings = {
 			]
 		}
 	],
-	areas: [
+	"areas": [
 		"Basement Bathroom",
 		"Shop",
 		"Gym",
@@ -285,68 +285,59 @@ const settings = {
 		"Exterior",
 		"Cabana"
 	],
-	views: [
+	"views": [
 		"HomeView",
 		"DevicesView"
 	],
-	domains: [
+	"domains": [
 		{ 
-			name: "light", 
-			title: "Lights", 
-			on: "on", 
-			off: "off", 
-			icon: "mdi:lightbulb", 
-			card: {
+			"name": "light", 
+			"title": "Lights", 
+			"on": "on", 
+			"off": "off", 
+			"icon": "mdi:lightbulb", 
+			"card": {
 				"type": "custom:mushroom-light-card",
 				"show_brightness_control": true,
 				"layout": "horizontal"
 			}
 		},
 		{ 
-			name: "fan", 
-			title: "Fans", 
-			on: "on", 
-			off: "off", 
-			icon: "mdi:fan",
-			card: {
+			"name": "fan", 
+			"title": "Fans", 
+			"on": "on", 
+			"off": "off", 
+			"icon": "mdi:fan",
+			"card": {
 				"type": "custom:mushroom-fan-card"
 			}
 		},
 		{ 
-			name: "cover", 
-			title: "Covers", 
-			on: "open", 
-			off: "closed", 
-			icon: "mdi:blinds",
-			card: {
+			"name": "cover", 
+			"title": "Covers", 
+			"on": "open", 
+			"off": "closed", 
+			"icon": "mdi:blinds",
+			"card": {
 				"type": "custom:mushroom-cover-card"
 			}
-		},
+		}
 	],
-	sensors: [
+	"sensors": [
 		{
 			"name": "James Lights On",
-			"state": "{{ states.light | selectattr('state','eq','on') | list | count }}"
-		},
-		{
-			"name": "James Lights Off",
-			"state": "{{ states.light | selectattr('state','eq','off') | list | count }}"
+			"state": "{{ states.light | selectattr('state','eq','on') | list | count }}",
+			"domain": "light"
 		},
 		{
 			"name": "James Fans On",
-			"state": "{{ states.fan | selectattr('state','eq','on') | list | count }}"
-		},
-		{
-			"name": "James Fans Off",
-			"state": "{{ states.fan | selectattr('state','eq','off') | list | count }}"
+			"state": "{{ states.fan | selectattr('state','eq','on') | list | count }}",
+			"domain": "fan"
 		},
 		{
 			"name": "James Covers On",
-			"state": "{{ states.cover | selectattr('state','eq','open') | list | count }}"
-		},
-		{
-			"name": "James Covers Off",
-			"state": "{{ states.cover | selectattr('state','eq','closed') | list | count }}"
+			"state": "{{ states.cover | selectattr('state','eq','open') | list | count }}",
+			"domain": "cover"
 		}
 	]
 }
@@ -408,7 +399,7 @@ class DevicesView {
 			new cards_ChipsCard__WEBPACK_IMPORTED_MODULE_1__.EntityChip(`sensor.james_${info.view.strategy.options.domain.name}s_on`, info.view.strategy.options.domain.icon, "yellow", info.view.strategy.options.domain.name),
 		];
 		for (let level of settings_js__WEBPACK_IMPORTED_MODULE_2__.settings.levels) {
-			chips.push(new cards_ChipsCard__WEBPACK_IMPORTED_MODULE_1__.EntityChip(`sensor.james_${info.view.strategy.options.domain.name}s_on`, level.icon, info.view.strategy.options.level?.name==level.name ? "green" : "blue", `${level.name}-${info.view.strategy.options.domain.name}`));
+			chips.push(new cards_ChipsCard__WEBPACK_IMPORTED_MODULE_1__.EntityChip(`sensor.james_${level.name$}_${info.view.strategy.options.domain.name}s_on`, level.icon, info.view.strategy.options.level?.name==level.name ? "green" : "blue", `${level.name}-${info.view.strategy.options.domain.name}`));
 		}
 
 		let result = [
